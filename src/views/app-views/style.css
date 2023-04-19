@@ -1,0 +1,36 @@
+.ant-image-preview-operations {
+  color: white !important;
+}
+.ant-image-preview-switch-left,
+.ant-image-preview-switch-right {
+  color: white !important;
+  background-color: rgba(0, 0, 0, 0.3) !important;
+}
+
+.ant-card-meta-detail > div:not(:last-child) {
+  margin-bottom: 4px;
+}
+.spin-loader {
+  width: 100%;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.ant-slider {
+  margin: 3px 6px 0px;
+}
+
+.ant-image {
+  height: 200px !important;
+}
+
+.ant-image img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+@media only screen and (max-width: 480px) {
+  .ant-row {
+    display: block !important;
+  }
+}

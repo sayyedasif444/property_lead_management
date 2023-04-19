@@ -1,0 +1,9 @@
+{
+  "home": "Home",
+  "sidenav.general-settings": "System Application",
+  "sidenav.applicaiton-settings": "Application Settings",
+  "sidenav.settings": "Settings",
+  "sidenav.property-management": "Property Management",
+  "sidenav.lead-management": "Lead Management",
+  "sidenav.user-management": "User Management"
+}
