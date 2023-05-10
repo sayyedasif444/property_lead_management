@@ -1,7 +1,7 @@
 //Dev URL
-export const BACKEND_URL = 'http://181.215.78.135:5000/api/';
-export const BACKEND_URL_MEDIA = 'http://181.215.78.135:5000/uploads/';
-export const FRONT_END_URL = 'http://181.215.78.135:5000/uploads/';
+export const BACKEND_URL = 'http://localhost:5000/api/';
+export const BACKEND_URL_MEDIA = 'http://localhost:5000/uploads/';
+export const FRONT_END_URL = 'http://localhost:5000/uploads/';
 
 //auth
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
