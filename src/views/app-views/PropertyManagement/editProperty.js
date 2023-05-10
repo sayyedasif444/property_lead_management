@@ -76,6 +76,8 @@ const AddProperty = ({
             : '',
         plot_land_mark:
           singleData.plot_land_mark !== null ? singleData.plot_land_mark : '',
+        source_name:
+          singleData.source_name !== null ? singleData.source_name : '',
         near_by: singleData.near_by !== null ? singleData.near_by : '',
         expected_price:
           singleData.expected_price !== null ? singleData.expected_price : '',
@@ -135,7 +137,6 @@ const AddProperty = ({
     },
     fileData,
   };
-
 
   const props2 = {
     multiple: true,
@@ -418,7 +419,19 @@ const AddProperty = ({
                         />
                       </Form.Item>
                     </Col>
-                    <Col lg={24}>
+                    <Col lg={8}>
+                      <Form.Item
+                        className='mb-3'
+                        name='source_name'
+                        label={<span>Source Name </span>}
+                      >
+                        <Input
+                          style={{ width: '100%' }}
+                          placeholder='Source Name'
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col lg={16}>
                       <Form.Item
                         className='mb-3'
                         name='google_map_link'

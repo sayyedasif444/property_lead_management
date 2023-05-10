@@ -33,6 +33,10 @@ export const AppViews = () => {
           path={`${APP_PREFIX_PATH}/user-profile`}
           component={lazy(() => import(`./ProfileManage`))}
         />
+        <Route
+          path={`${APP_PREFIX_PATH}/lead-management`}
+          component={lazy(() => import(`./LeadManagement`))}
+        />
       </Switch>
     </Suspense>
   );

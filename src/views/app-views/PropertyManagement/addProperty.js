@@ -356,7 +356,7 @@ const AddProperty = ({ addProperty, errMessage, isError, isErrorType }) => {
                     <Col lg={8}>
                       <Form.Item
                         className='mb-3'
-                        name='price_per_sqft'
+                        name='source_name'
                         label={<span>Price Per sqft </span>}
                       >
                         <InputNumber
@@ -365,7 +365,19 @@ const AddProperty = ({ addProperty, errMessage, isError, isErrorType }) => {
                         />
                       </Form.Item>
                     </Col>
-                    <Col lg={24}>
+                    <Col lg={8}>
+                      <Form.Item
+                        className='mb-3'
+                        name='source_name'
+                        label={<span>Source Name </span>}
+                      >
+                        <Input
+                          style={{ width: '100%' }}
+                          placeholder='Source Name'
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col lg={16}>
                       <Form.Item
                         className='mb-3'
                         name='google_map_link'

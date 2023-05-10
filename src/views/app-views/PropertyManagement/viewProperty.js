@@ -148,6 +148,10 @@ const ViewProperty = ({ singleData }) => {
           data: singleData.price_per_sqft,
         },
         {
+          title: <strong className='text-capitalize'>Source Name</strong>,
+          data: singleData.source_name,
+        },
+        {
           title: <strong className='text-capitalize'>google map link</strong>,
           data: (
             <a
