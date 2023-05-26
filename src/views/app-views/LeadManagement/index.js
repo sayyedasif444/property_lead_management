@@ -359,9 +359,9 @@ const Index = ({
             >
               {element.interactions.length > 0
                 ? moment(
-                    element.interactions.sort(
-                      (a, b) => parseFloat(b.id) - parseFloat(a.id)
-                    )[0].i_date
+                    element.interactions
+                      .sort((a, b) => parseFloat(b.id) - parseFloat(a.id))[0]
+                      .i_date.substr(0, 10)
                   ).format('MMM-DD')
                 : 'Add'}
             </Link>
@@ -382,9 +382,9 @@ const Index = ({
             >
               {element.actions.length > 0
                 ? moment(
-                    element.actions.sort(
-                      (a, b) => parseFloat(b.id) - parseFloat(a.id)
-                    )[0].i_date
+                    element.actions
+                      .sort((a, b) => parseFloat(b.id) - parseFloat(a.id))[0]
+                      .i_date.substr(0, 10)
                   ).format('MMM-DD')
                 : 'Add'}
             </Link>
