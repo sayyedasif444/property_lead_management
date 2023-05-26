@@ -106,7 +106,16 @@ const AddUser = ({
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item name='mobile_number' label={<span>Phone Number</span>}>
+            <Form.Item
+              name='mobile_number'
+              label={<span>Phone Number</span>}
+              rules={[
+                {
+                  required: true,
+                  message: `Please input Mobile Number`,
+                },
+              ]}
+            >
               <Input placeholder='Phone Number' />
             </Form.Item>
           </Col>

@@ -5,5 +5,7 @@
   "sidenav.settings": "Settings",
   "sidenav.property-management": "Property Management",
   "sidenav.lead-management": "Lead Management",
-  "sidenav.user-management": "User Management"
+  "sidenav.user-management": "User Management",
+  "sidenav.task-management": "Task Management",
+  "sidenav.my-task": "My Task"
 }

@@ -11,6 +11,8 @@ import {
   ProjectOutlined,
   FileAddOutlined,
   UserSwitchOutlined,
+  ClockCircleOutlined,
+  IssuesCloseOutlined,
 } from '@ant-design/icons';
 import { APP_PREFIX_PATH } from '../../configs/AppConfig';
 
@@ -38,6 +40,22 @@ const superUserNavTree = [
         path: `${APP_PREFIX_PATH}/lead-management`,
         title: 'sidenav.lead-management',
         icon: FileAddOutlined,
+        breadcrumb: true,
+        submenu: [],
+      },
+      {
+        key: 'task-management',
+        path: `${APP_PREFIX_PATH}/task-management`,
+        title: 'sidenav.task-management',
+        icon: ClockCircleOutlined,
+        breadcrumb: true,
+        submenu: [],
+      },
+      {
+        key: 'my-task',
+        path: `${APP_PREFIX_PATH}/my-task`,
+        title: 'sidenav.my-task',
+        icon: IssuesCloseOutlined,
         breadcrumb: true,
         submenu: [],
       },
@@ -74,6 +92,14 @@ const userNavTree = [
         path: `${APP_PREFIX_PATH}/lead-management`,
         title: 'sidenav.lead-management',
         icon: FileAddOutlined,
+        breadcrumb: true,
+        submenu: [],
+      },
+      {
+        key: 'my-task',
+        path: `${APP_PREFIX_PATH}/my-task`,
+        title: 'sidenav.my-task',
+        icon: IssuesCloseOutlined,
         breadcrumb: true,
         submenu: [],
       },

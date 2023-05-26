@@ -1,7 +1,7 @@
 //Dev URL
-export const BACKEND_URL = 'http://localhost:5000/api/';
-export const BACKEND_URL_MEDIA = 'http://localhost:5000/uploads/';
-export const FRONT_END_URL = 'http://localhost:5000/uploads/';
+export const BACKEND_URL = 'http://181.215.78.135:5000/api/';
+export const BACKEND_URL_MEDIA = 'http://181.215.78.135:5000/uploads/';
+export const FRONT_END_URL = 'http://181.215.78.135:5000/uploads/';
 
 //auth
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -53,3 +53,9 @@ export const LOADING_LIST_ACTION = 'LOADING_LIST_ACTION';
 export const SET_SIGNLE_LEAD = 'SET_SIGNLE_LEAD';
 export const SET_SIGNLE_INTERACTION = 'SET_SIGNLE_INTERACTION';
 export const SET_SIGNLE_ACTION = 'SET_SIGNLE_ACTION';
+
+//Task
+export const SET_ALERT_TASK = 'SET_ALERT_TASK';
+export const LIST_TASK_DATA = 'LIST_TASK_DATA';
+export const LOADING_LIST_TASK = 'LOADING_LIST_TASK';
+export const SET_SIGNLE_TASK = 'SET_SIGNLE_TASK';

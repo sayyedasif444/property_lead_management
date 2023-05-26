@@ -334,6 +334,8 @@ const Index = ({
           company: element.company,
           emailid: element.emailid,
           phone: element.mobile_number,
+          interaction_bool: element.interactions.length > 0,
+          action_bool: element.actions.length > 0,
           client: element.first_name + ' ' + element.last_name,
           source: element.source !== null ? element.source.source : '',
           created_at: element.createdAt.substr(0, 10),
@@ -521,6 +523,13 @@ const Index = ({
               columns={columns}
               dataSource={searchData}
               loading={loading}
+              rowClassName={(record, index) =>
+                record.isCompleted
+                  ? 'text-success'
+                  : record.interaction_bool
+                  ? ''
+                  : 'text-danger'
+              }
             />
           </Col>
         </Row>

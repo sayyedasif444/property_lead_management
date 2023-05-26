@@ -37,6 +37,14 @@ export const AppViews = () => {
           path={`${APP_PREFIX_PATH}/lead-management`}
           component={lazy(() => import(`./LeadManagement`))}
         />
+        <Route
+          path={`${APP_PREFIX_PATH}/task-management`}
+          component={lazy(() => import(`./TaskManagement`))}
+        />
+        <Route
+          path={`${APP_PREFIX_PATH}/my-task`}
+          component={lazy(() => import(`./TaskList`))}
+        />
       </Switch>
     </Suspense>
   );
