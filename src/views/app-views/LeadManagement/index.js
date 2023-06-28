@@ -238,6 +238,106 @@ const Index = ({
         },
       },
       {
+        title: 'Arrival',
+        dataIndex: 'arrival',
+        key: 'arrival',
+        filters: [
+          {
+            value: '1',
+            text: 'Not set',
+          },
+          {
+            value: '2',
+            text: 'Overdue',
+          },
+          {
+            value: '4',
+            text: 'Today',
+          },
+          {
+            value: '5',
+            text: 'Tomorrow',
+          },
+          {
+            value: '3',
+            text: 'Future',
+          },
+        ],
+        onFilter: (value, record) => {
+          var dataz = data.filter((ele) => ele.id === record.lead_id)[0];
+          if (value === '1') {
+            if (
+              dataz.actions.filter((ele) => ele.isOpen && ele.isArrival)
+                .length === 0
+            ) {
+              return true;
+            }
+          }
+          if (value === '2') {
+            if (dataz.actions.length > 0) {
+              if (
+                dataz.actions.filter(
+                  (ele) =>
+                    ele.isOpen &&
+                    ele.isArrival &&
+                    new Date(ele.i_date) < new Date()
+                ).length > 0
+              ) {
+                return true;
+              }
+            }
+          }
+          if (value === '3') {
+            if (dataz.actions.length > 0) {
+              if (
+                dataz.actions.filter(
+                  (ele) =>
+                    ele.isOpen &&
+                    ele.isArrival &&
+                    new Date(ele.i_date) >= new Date()
+                ).length > 0
+              ) {
+                return true;
+              }
+            }
+          }
+          if (value === '4') {
+            if (dataz.actions.length > 0) {
+              if (
+                dataz.actions.filter(
+                  (ele) =>
+                    ele.isOpen &&
+                    ele.isArrival &&
+                    moment(ele.i_date).format('DD-MM-YYYY') ===
+                      moment(new Date()).format('DD-MM-YYYY')
+                ).length > 0
+              ) {
+                return true;
+              }
+            }
+          }
+          if (value === '5') {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            if (dataz.actions.length > 0) {
+              if (
+                dataz.actions.filter(
+                  (ele) =>
+                    ele.isOpen &&
+                    ele.isArrival &&
+                    moment(ele.i_date).format('DD-MM-YYYY') ===
+                      moment(moment(new Date()).add(1, 'days')).format(
+                        'DD-MM-YYYY'
+                      )
+                ).length > 0
+              ) {
+                return true;
+              }
+            }
+          }
+        },
+      },
+      {
         title: 'Completed',
         dataIndex: 'isComplete',
         key: 'isComplete',
@@ -389,6 +489,29 @@ const Index = ({
                 : 'Add'}
             </Link>
           ),
+          arrival: (
+            <Link
+              to='#!'
+              className='text-uppercase'
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                store.dispatch({
+                  type: SET_SIGNLE_LEAD,
+                  payload: element,
+                });
+                setmodalVisibleAction(true);
+              }}
+            >
+              {element.actions.filter((ele) => ele.isArrival).length > 0
+                ? moment(
+                    element.actions
+                      .sort((a, b) => parseFloat(b.id) - parseFloat(a.id))[0]
+                      .i_date.substr(0, 10)
+                  ).format('MMM-DD')
+                : 'Add'}
+            </Link>
+          ),
           isComplete: (
             <span onClick={(e) => e.stopPropagation()}>
               <Popconfirm
@@ -519,7 +642,7 @@ const Index = ({
                 };
               }}
               className='border'
-              scroll={{ x: 1600 }}
+              scroll={{ x: 1800 }}
               columns={columns}
               dataSource={searchData}
               loading={loading}

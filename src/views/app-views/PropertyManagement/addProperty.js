@@ -58,7 +58,6 @@ const AddProperty = ({ addProperty, errMessage, isError, isErrorType }) => {
           return false;
         }
       });
-      console.log(fileList);
       if (!flag) setfileData([...fileList]);
       return false;
     },
@@ -75,7 +74,6 @@ const AddProperty = ({ addProperty, errMessage, isError, isErrorType }) => {
           return false;
         }
       });
-      console.log(fileList);
       if (!flag) setfileData([...fileList]);
       return false;
     },

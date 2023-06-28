@@ -27,7 +27,6 @@ const ForgotPassword = ({
     await forgotPassword(values.email);
   };
   useEffect(() => {
-    console.log(isError, isErrorType, errMessage);
     if (isError && isErrorType === 'RESET_SUCCESS') {
       message.success(errMessage);
       const uri = '/auth/login';

@@ -46,6 +46,8 @@ const AddUser = ({
           singleAction.description !== null ? singleAction.description : '',
         assigned_id:
           singleAction.assigned_id !== null ? singleAction.assigned_id : '',
+        isArrival:
+          singleAction.isArrival !== null ? singleAction.isArrival : false,
       });
     }
   }, [singleAction, form, visible]);
@@ -76,7 +78,7 @@ const AddUser = ({
         onFinish={onSubmit}
       >
         <Row gutter={16}>
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item
               name='i_date'
               style={{ width: '100%' }}
@@ -91,7 +93,7 @@ const AddUser = ({
               <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item
               name='i_time'
               style={{ width: '100%' }}
@@ -106,7 +108,7 @@ const AddUser = ({
               <TimePicker style={{ width: '100%' }} format='HH:mm' />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item name='assigned_id' label={<span>Assign to</span>}>
               <Select size={'default'} style={{ width: '100%' }}>
                 <Select.Option value={''}></Select.Option>
@@ -115,6 +117,18 @@ const AddUser = ({
                     {ele.first_name + ' ' + ele.last_name}
                   </Select.Option>
                 ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='isArrival'
+              label={<span>Arrival</span>}
+              initialValue={false}
+            >
+              <Select size={'default'} style={{ width: '100%' }}>
+                <Select.Option value={false}>No</Select.Option>
+                <Select.Option value={true}>Yes</Select.Option>
               </Select>
             </Form.Item>
           </Col>

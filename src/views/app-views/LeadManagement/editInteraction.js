@@ -29,8 +29,6 @@ const AddUser = ({
   const onSubmit = (values) => {
     values.lead_id = singleData.id;
     values.id = singleInteraction.id;
-    values.i_date = values.i_date.format('YYYY-MM-DD');
-    console.log(values);
     editInteraction(values);
   };
 

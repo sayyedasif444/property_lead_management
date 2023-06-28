@@ -15,57 +15,10 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { BACKEND_URL_MEDIA } from '../../../actions/types';
-import jsPDF from 'jspdf';
+import { downloadData } from '../../../apis/dashboard/Property';
 
-const ViewProperty = ({ singleData }) => {
-  async function addImageProcess(src) {
-    return new Promise((resolve, reject) => {
-      let img = new Image();
-      img.src = src;
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-    });
-  }
-
+const ViewProperty = ({ singleData, downloadData }) => {
   const reportTemplateRef = useRef(null);
-
-  const handleGeneratePdf = async (data) => {
-    let imageUrls = data.map((ele) => BACKEND_URL_MEDIA + ele.media_link);
-
-    const doc = new jsPDF({
-      format: 'a4',
-      unit: 'px',
-      externals: {
-        // only define the dependencies you are NOT using as externals!
-        canvg: 'canvg',
-        html2canvas: 'html2canvas',
-        dompurify: 'dompurify',
-        pagebreak: { mode: 'avoid-all', after: '.avoidThisRow' },
-      },
-    });
-
-    // Adding the fonts.
-    doc.setFont('Inter-Regular', 'normal');
-    const image = await addImageProcess('/img/logo-white.png');
-    doc.addImage(image, 'png', 30, 20, 130, 0);
-    doc.setTextColor('blue');
-    singleData.google_map_link !== null &&
-      doc.textWithLink('View on map', 350, 100, {
-        url: singleData.google_map_link,
-        style: { color: 'blue' },
-      });
-    doc.html(reportTemplateRef.current, {
-      async callback(doc) {
-        for (const [i, url] of imageUrls.entries()) {
-          doc.addPage();
-          const image = await addImageProcess(url, i);
-          doc.addImage(image, 'png', 30, 30, 340, 0);
-        }
-
-        await doc.save('PROPERTY' + singleData.id);
-      },
-    });
-  };
 
   const columns8 = [
     {
@@ -185,7 +138,7 @@ const ViewProperty = ({ singleData }) => {
       marginTop: '80px',
       marginLeft: '30px',
       marginRight: '30px',
-      'page-break-after': 'always',
+      pageBreakAfter: 'always',
       fontSize: '11px',
     },
 
@@ -237,13 +190,7 @@ const ViewProperty = ({ singleData }) => {
               icon={<DownloadOutlined />}
               onClick={(e) => {
                 e.preventDefault();
-                handleGeneratePdf(
-                  singleData.property_media === null
-                    ? []
-                    : singleData.property_media.filter(
-                        (ele) => ele.media_type === 'image'
-                      )
-                );
+                downloadData(singleData.id);
               }}
             />
           </Tooltip>
@@ -788,8 +735,9 @@ const ViewProperty = ({ singleData }) => {
 
 ViewProperty.propTypes = {
   singleData: PropTypes.any,
+  downloadData: PropTypes.any,
 };
 const mapStateToProps = (state) => ({
   singleData: state.property.singleData,
 });
-export default connect(mapStateToProps, {})(ViewProperty);
+export default connect(mapStateToProps, { downloadData })(ViewProperty);

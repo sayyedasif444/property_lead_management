@@ -481,7 +481,7 @@ const AddProperty = ({
                         singleData.property_media !== null &&
                         singleData.property_media
                           .filter((ele) => ele.media_type === 'image')
-                          .map((ele) => (
+                          .map((ele, index) => (
                             <div
                               style={{
                                 width: '140px',
@@ -490,6 +490,7 @@ const AddProperty = ({
                                 padding: '3px',
                                 position: 'relative',
                               }}
+                              key={index}
                             >
                               <Popconfirm
                                 title='Are you sure?'
@@ -531,8 +532,11 @@ const AddProperty = ({
                         singleData.property_media !== null &&
                         singleData.property_media
                           .filter((ele) => ele.media_type === 'video')
-                          .map((ele) => (
-                            <div className='w-100 overflow-auto mt-2 pb-2 border-bottom'>
+                          .map((ele, index) => (
+                            <div
+                              className='w-100 overflow-auto mt-2 pb-2 border-bottom'
+                              key={index}
+                            >
                               <a
                                 href={BACKEND_URL_MEDIA + ele.media_link}
                                 target='_blank'

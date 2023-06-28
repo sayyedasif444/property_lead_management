@@ -1,18 +1,28 @@
 import React, { useEffect } from 'react';
-import { Button, Checkbox, Col, Modal } from 'antd';
+import { Button, Checkbox, Col, Input, Modal } from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { updateTaskList } from '../../../apis/dashboard/Task';
+import { Link } from 'react-router-dom';
 
 const EditTask = ({ visible, cancel, singleData, updateTaskList }) => {
   const [tasklist, settasklist] = useState([{ text: '', status: false }]);
 
   useEffect(() => {
     if (Object.keys(singleData).length > 0 && visible) {
-      settasklist(JSON.parse(singleData.tasklist));
+      settasklist(
+        JSON.parse(singleData.tasklist).map((ele) => {
+          return {
+            ...ele,
+            show: false,
+            reason: ele.hasOwnProperty('reason') ? ele.reason : '',
+          };
+        })
+      );
     }
   }, [singleData, visible]);
+
 
   return (
     <Modal
@@ -28,7 +38,7 @@ const EditTask = ({ visible, cancel, singleData, updateTaskList }) => {
       {tasklist.length > 0 && (
         <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
           {tasklist.map((ele, index) => (
-            <li key={index} className='p-2 border'>
+            <li key={index} className='p-2 border mb-1'>
               <Checkbox
                 checked={ele.status}
                 className='mr-2'
@@ -39,6 +49,77 @@ const EditTask = ({ visible, cancel, singleData, updateTaskList }) => {
                 }}
               />
               {ele.text}
+              <br />
+              <div className='mt-2 pt-1 border-top'>
+                {ele.reason !== '' ? (
+                  ele.show ? (
+                    <Input
+                      placeholder='Add reason'
+                      value={ele.reason}
+                      onChange={(e) => {
+                        var data = [...tasklist];
+                        data[index].reason = e.target.value;
+                        settasklist(data);
+                      }}
+                    />
+                  ) : (
+                    <p className='pb-0 pl-1 mb-0'>{ele.reason}</p>
+                  )
+                ) : (
+                  ele.show && (
+                    <Input
+                      placeholder='Add reason'
+                      value={ele.reason}
+                      onChange={(e) => {
+                        var data = [...tasklist];
+                        data[index].reason = e.target.value;
+                        settasklist(data);
+                      }}
+                    />
+                  )
+                )}
+                {ele.hasOwnProperty('reason') ? (
+                  <Link
+                    to='#!'
+                    className='pt-1 pl-1'
+                    onClick={(e) => {
+                      e.preventDefault();
+                      var data = [...tasklist];
+                      data.map((ele) => {
+                        return { ...ele, show: false };
+                      });
+                      data[index].show = !data[index].show;
+                      settasklist(data);
+                    }}
+                  >
+                    {ele.show
+                      ? 'Save'
+                      : ele.reason === ''
+                      ? 'Add reason'
+                      : 'Edit reason'}
+                  </Link>
+                ) : (
+                  <Link
+                    to='#!'
+                    className='pt-1 pl-1'
+                    onClick={(e) => {
+                      e.preventDefault();
+                      var data = [...tasklist];
+                      data.map((ele) => {
+                        return { ...ele, show: false };
+                      });
+                      data[index].show = !data[index].show;
+                      settasklist(data);
+                    }}
+                  >
+                    {ele.show
+                      ? 'Save'
+                      : ele.reason === ''
+                      ? 'Add reason'
+                      : 'Edit reason'}
+                  </Link>
+                )}
+              </div>
             </li>
           ))}
         </ul>

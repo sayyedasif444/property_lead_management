@@ -5,6 +5,11 @@ import property from './Property';
 import user from './User';
 import lead from './Lead';
 import task from './Task';
+import meeting from './Meeting';
+import expense from './Expense';
+import project from './Project';
+import customer from './Customer';
+import transaction from './Transaction';
 
 export default combineReducers({
   auth,
@@ -13,4 +18,9 @@ export default combineReducers({
   user,
   lead,
   task,
+  meeting,
+  expense,
+  project,
+  customer,
+  transaction,
 });

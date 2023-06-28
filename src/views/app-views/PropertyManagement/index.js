@@ -54,10 +54,10 @@ const Index = ({
     setdataSet(
       dataz
         .filter((ele) => ele.isActive)
-        .map((ele) => {
+        .map((ele, index) => {
           return {
             ...ele,
-            propert_id: 'PROPERTY' + ele.id,
+            propert_id: 'PROPERTY' + (index + 1),
             expected_price:
               ele.expected_price !== null ? parseInt(ele.expected_price) : 0,
           };

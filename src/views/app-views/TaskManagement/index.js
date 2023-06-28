@@ -83,7 +83,6 @@ const Index = ({
           ],
           onFilter: (value, record) => {
             var dataz = data.filter((ele) => ele.id === record.id);
-            console.log(value, record, dataz);
             if (value === '2') {
               if (dataz.length > 0) {
                 if (
@@ -151,7 +150,6 @@ const Index = ({
           ],
           onFilter: (value, record) => {
             var dataz = data.filter((ele) => ele.id === record.id);
-            console.log(value, record, dataz);
             if (value === '2') {
               if (dataz.length > 0) {
                 if (dataz.filter((ele) => ele.isOpen).length > 0) {

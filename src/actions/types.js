@@ -1,8 +1,15 @@
 //Dev URL
-export const BACKEND_URL = 'http://181.215.78.135:5000/api/';
-export const BACKEND_URL_MEDIA = 'http://181.215.78.135:5000/uploads/';
-export const FRONT_END_URL = 'http://181.215.78.135:5000/uploads/';
+export const BACKEND_URL = 'https://crm-backend.bodhirealestate.in/api/';
+export const BACKEND_URL_MEDIA =
+  'https://crm-backend.bodhirealestate.in/uploads/';
+export const FRONT_END_URL = 'https://crm-backend.bodhirealestate.in/uploads/';
+export const BACKEND_URL_PDF =
+  'https://crm-backend.bodhirealestate.in/property/';
 
+// export const BACKEND_URL = 'http://localhost:5000/api/';
+// export const BACKEND_URL_MEDIA = 'http://localhost:5000/uploads/';
+// export const FRONT_END_URL = 'http://localhost:5000/uploads/';
+// export const BACKEND_URL_PDF = 'http://localhost:5000/property/';
 //auth
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const OTP_FREEZE = 'OTP_FREEZE';
@@ -59,3 +66,34 @@ export const SET_ALERT_TASK = 'SET_ALERT_TASK';
 export const LIST_TASK_DATA = 'LIST_TASK_DATA';
 export const LOADING_LIST_TASK = 'LOADING_LIST_TASK';
 export const SET_SIGNLE_TASK = 'SET_SIGNLE_TASK';
+
+//Task
+export const SET_ALERT_MEETING = 'SET_ALERT_MEETING';
+export const LIST_MEETING_DATA = 'LIST_MEETING_DATA';
+export const LOADING_LIST_MEETING = 'LOADING_LIST_MEETING';
+export const SET_SIGNLE_MEETING = 'SET_SIGNLE_MEETING';
+
+//expense
+export const SET_ALERT_EXPENSE = 'SET_ALERT_EXPENSE';
+export const LIST_EXPENSE_DATA = 'LIST_EXPENSE_DATA';
+export const LOADING_LIST_EXPENSE = 'LOADING_LIST_EXPENSE';
+export const SET_SIGNLE_EXPENSE = 'SET_SIGNLE_EXPENSE';
+export const LIST_EXPNSE_CATEGORY = 'LIST_EXPNSE_CATEGORY';
+
+//projects
+export const SET_ALERT_PROJECT = 'SET_ALERT_PROJECT';
+export const LIST_PROJECT_DATA = 'LIST_PROJECT_DATA';
+export const LOADING_LIST_PROJECT = 'LOADING_LIST_PROJECT';
+export const SET_SIGNLE_PROJECT = 'SET_SIGNLE_PROJECT';
+
+//customer
+export const SET_ALERT_CUSTOMER = 'SET_ALERT_CUSTOMER';
+export const LIST_CUSTOMER_DATA = 'LIST_CUSTOMER_DATA';
+export const LOADING_LIST_CUSTOMER = 'LOADING_LIST_CUSTOMER';
+export const SET_SIGNLE_CUSTOMER = 'SET_SIGNLE_CUSTOMER';
+
+//transacton
+export const SET_ALERT_TRANSACTION = 'SET_ALERT_TRANSACTION';
+export const LIST_TRANSACTION_DATA = 'LIST_TRANSACTION_DATA';
+export const LOADING_LIST_TRANSACTION = 'LOADING_LIST_TRANSACTION';
+export const SET_SIGNLE_TRANSACTION = 'SET_SIGNLE_TRANSACTION';

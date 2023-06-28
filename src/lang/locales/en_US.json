@@ -7,5 +7,11 @@
   "sidenav.lead-management": "Lead Management",
   "sidenav.user-management": "User Management",
   "sidenav.task-management": "Task Management",
-  "sidenav.my-task": "My Task"
+  "sidenav.my-task": "My Task",
+  "sidenav.schedule-meeting": "Meeting Schedule",
+  "sidenav.account-management": "Account Management",
+  "sidenav.project-management": "Project Management",
+  "sidenav.customer-management": "Customer Management",
+  "sidenav.expense-management": "Expense Management",
+  "sidenav.transaction": "Transaction"
 }

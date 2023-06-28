@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {
   BACKEND_URL,
+  BACKEND_URL_PDF,
   LIST_PROPERTY_DATA,
   LOADING_LIST_PROPERTY,
   SET_ALERT_PROPERTY,
@@ -415,4 +416,30 @@ export const listPropertybyId = (id) => async (dispatch) => {
         payload: {},
       });
     });
+};
+
+export const downloadData = (id) => async (dispatch) => {
+  const config = {
+    'Content-Type': 'application/json',
+  };
+  const body = { id: id };
+  await axios({
+    method: 'POST',
+    url: BACKEND_URL + 'property/download-file',
+    data: body,
+    headers: config,
+  })
+    .then((response) => {
+      if (response.data.statuscode === 200) {
+        var link = document.createElement('a');
+        link.download = response.data.name;
+        link.href = BACKEND_URL_PDF + response.data.data;
+        link.target = '_blank'
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+      }
+    })
+    .catch((error) => {});
 };
