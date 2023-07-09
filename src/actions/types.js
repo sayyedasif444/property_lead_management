@@ -1,10 +1,10 @@
 //Dev URL
-export const BACKEND_URL = 'https://crm-backend.bodhirealestate.in/api/';
+export const BACKEND_URL = 'http://localhost:5000/api/';
 export const BACKEND_URL_MEDIA =
-  'https://crm-backend.bodhirealestate.in/uploads/';
-export const FRONT_END_URL = 'https://crm-backend.bodhirealestate.in/uploads/';
+  'http://localhost:5000/uploads/';
+export const FRONT_END_URL = 'http://localhost:5000/uploads/';
 export const BACKEND_URL_PDF =
-  'https://crm-backend.bodhirealestate.in/property/';
+  'http://localhost:5000/property/';
 
 // export const BACKEND_URL = 'http://localhost:5000/api/';
 // export const BACKEND_URL_MEDIA = 'http://localhost:5000/uploads/';
