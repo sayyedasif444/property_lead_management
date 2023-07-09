@@ -53,6 +53,11 @@ const Index = ({
       key: 'owner',
     },
     {
+      title: 'Broker',
+      dataIndex: 'broker',
+      key: 'broker',
+    },
+    {
       title: 'Phone Number',
       dataIndex: 'phone_number',
       key: 'phone_number',
@@ -110,6 +115,9 @@ const Index = ({
             (item.land_owner !== null
               ? item.land_owner.toLowerCase().indexOf(search.toLowerCase()) > -1
               : false) ||
+            (item.broker !== null
+              ? item.broker.toLowerCase().indexOf(search.toLowerCase()) > -1
+              : false) ||
             (item.address !== null
               ? item.address.toLowerCase().indexOf(search.toLowerCase()) > -1
               : false) ||
@@ -129,6 +137,7 @@ const Index = ({
           srno: index + 1,
           id: element.id,
           owner: element.land_owner,
+          broker: element.broker,
           phone_number: element.mobile_no,
           address: element.address,
           plot_location: element.plot_location,
@@ -219,7 +228,7 @@ const Index = ({
               className='border'
               columns={columns}
               dataSource={searchData}
-              scroll={{ x: 920 }}
+              scroll={{ x: 1120 }}
               loading={loading}
             />
           </Col>

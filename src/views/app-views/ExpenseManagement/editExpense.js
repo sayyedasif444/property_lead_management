@@ -28,7 +28,13 @@ const AddUser = ({
     mode: 'Cash',
     Cash: null,
     UPI: '',
-    Bank: '',
+    Bank: {
+      transaction_id: '',
+      bank_name: '',
+      account_no: '',
+      beneficiary_bank: '',
+      beneficiary_no: '',
+    },
     Cheque: { bank: '', number: '', date_of_check: '' },
   });
 
@@ -177,7 +183,7 @@ const AddUser = ({
               </Select>
             </Form.Item>
           </Col>
-          {(mode.mode === 'UPI' || mode.mode === 'Bank') && (
+          {mode.mode === 'UPI' && (
             <Col span={12}>
               <Form.Item
                 style={{ width: '100%' }}
@@ -237,6 +243,90 @@ const AddUser = ({
                     onChange={(e) => {
                       var mo = { ...mode };
                       mo.Cheque.date_of_check = e.target.value;
+                      setmode(mo);
+                    }}
+                  />
+                </Form.Item>
+              </Col>
+            </>
+          )}
+          {mode.mode === 'Bank' && (
+            <>
+              <Col span={12}>
+                <Form.Item
+                  style={{ width: '100%' }}
+                  label={<span>Bank Name</span>}
+                >
+                  <Input
+                    placeholder='Bank'
+                    value={mode.Bank.bank_name}
+                    onChange={(e) => {
+                      var mo = { ...mode };
+                      mo.Bank.bank_name = e.target.value;
+                      setmode(mo);
+                    }}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  style={{ width: '100%' }}
+                  label={<span>Account Number</span>}
+                >
+                  <Input
+                    placeholder='Account Number'
+                    value={mode.Bank.account_no}
+                    onChange={(e) => {
+                      var mo = { ...mode };
+                      mo.Bank.account_no = e.target.value;
+                      setmode(mo);
+                    }}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  style={{ width: '100%' }}
+                  label={<span>Beneficiary Bank</span>}
+                >
+                  <Input
+                    placeholder='Beneficiary Bank'
+                    value={mode.Bank.beneficiary_bank}
+                    onChange={(e) => {
+                      var mo = { ...mode };
+                      mo.Bank.beneficiary_bank = e.target.value;
+                      setmode(mo);
+                    }}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  style={{ width: '100%' }}
+                  label={<span>Beneficiary Account</span>}
+                >
+                  <Input
+                    placeholder='Beneficiary Account'
+                    value={mode.Bank.beneficiary_no}
+                    onChange={(e) => {
+                      var mo = { ...mode };
+                      mo.Bank.beneficiary_no = e.target.value;
+                      setmode(mo);
+                    }}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  style={{ width: '100%' }}
+                  label={<span>Transaction Id</span>}
+                >
+                  <Input
+                    placeholder='Transaction Id'
+                    value={mode.Bank.transaction_id}
+                    onChange={(e) => {
+                      var mo = { ...mode };
+                      mo.Bank.transaction_id = e.target.value;
                       setmode(mo);
                     }}
                   />

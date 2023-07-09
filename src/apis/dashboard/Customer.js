@@ -521,7 +521,7 @@ export const addExpenseP = (data) => async (dispatch) => {
   })
     .then((response) => {
       if (response.data.statuscode === 200) {
-        dispatch(listCustomers(data.project_id));
+        dispatch(listCustomers(data.customer_id));
         dispatch({
           type: SET_ALERT_CUSTOMER,
           payload: {
@@ -599,7 +599,7 @@ export const editExpenseP = (data) => async (dispatch) => {
   })
     .then((response) => {
       if (response.data.statuscode === 200) {
-        dispatch(listCustomers(data.project_id));
+        dispatch(listCustomers(data.customer_id));
         dispatch({
           type: SET_ALERT_CUSTOMER,
           payload: {
@@ -677,7 +677,241 @@ export const deleteExpenseP = (data) => async (dispatch) => {
   })
     .then((response) => {
       if (response.data.statuscode === 200) {
-        dispatch(listCustomers(data.project_id));
+        dispatch(listCustomers(data.customer_id));
+        dispatch({
+          type: SET_ALERT_CUSTOMER,
+          payload: {
+            isError: true,
+            isErrorType: 'SUCCESS_EXPENSE',
+            errMessage: response.data.message,
+          },
+        });
+        clearTimeout(userAlet);
+        userAlet = setTimeout(() => {
+          dispatch({
+            type: SET_ALERT_CUSTOMER,
+            payload: {
+              isError: false,
+              isErrorType: null,
+              errMessage: null,
+            },
+          });
+        }, 100);
+      } else {
+        dispatch({
+          type: SET_ALERT_CUSTOMER,
+          payload: {
+            isError: true,
+            isErrorType: 'FAIL',
+            errMessage: response.data.message,
+          },
+        });
+        clearTimeout(userAlet);
+        userAlet = setTimeout(() => {
+          dispatch({
+            type: SET_ALERT_CUSTOMER,
+            payload: {
+              isError: false,
+              isErrorType: null,
+              errMessage: null,
+            },
+          });
+        }, 100);
+      }
+    })
+    .catch((error) => {
+      dispatch({
+        type: SET_ALERT_CUSTOMER,
+        payload: {
+          isError: true,
+          isErrorType: 'FAIL',
+          errMessage: 'Something went wrong! Please try again later',
+        },
+      });
+      clearTimeout(userAlet);
+      userAlet = setTimeout(() => {
+        dispatch({
+          type: SET_ALERT_CUSTOMER,
+          payload: {
+            isError: false,
+            isErrorType: null,
+            errMessage: null,
+          },
+        });
+      }, 100);
+    });
+};
+
+export const addRepayment = (data) => async (dispatch) => {
+  const config = {
+    'Content-Type': 'application/json',
+  };
+  const body = data;
+  await axios({
+    method: 'POST',
+    url: BACKEND_URL + 'account/add-customer-repayment',
+    data: body,
+    headers: config,
+  })
+    .then((response) => {
+      if (response.data.statuscode === 200) {
+        dispatch(listCustomers(data.customer_id));
+        dispatch({
+          type: SET_ALERT_CUSTOMER,
+          payload: {
+            isError: true,
+            isErrorType: 'SUCCESS_EXPENSE',
+            errMessage: response.data.message,
+          },
+        });
+        clearTimeout(userAlet);
+        userAlet = setTimeout(() => {
+          dispatch({
+            type: SET_ALERT_CUSTOMER,
+            payload: {
+              isError: false,
+              isErrorType: null,
+              errMessage: null,
+            },
+          });
+        }, 100);
+      } else {
+        dispatch({
+          type: SET_ALERT_CUSTOMER,
+          payload: {
+            isError: true,
+            isErrorType: 'FAIL',
+            errMessage: response.data.message,
+          },
+        });
+        clearTimeout(userAlet);
+        userAlet = setTimeout(() => {
+          dispatch({
+            type: SET_ALERT_CUSTOMER,
+            payload: {
+              isError: false,
+              isErrorType: null,
+              errMessage: null,
+            },
+          });
+        }, 100);
+      }
+    })
+    .catch((error) => {
+      dispatch({
+        type: SET_ALERT_CUSTOMER,
+        payload: {
+          isError: true,
+          isErrorType: 'FAIL',
+          errMessage: 'Something went wrong! Please try again later',
+        },
+      });
+      clearTimeout(userAlet);
+      userAlet = setTimeout(() => {
+        dispatch({
+          type: SET_ALERT_CUSTOMER,
+          payload: {
+            isError: false,
+            isErrorType: null,
+            errMessage: null,
+          },
+        });
+      }, 100);
+    });
+};
+
+export const editRepayment = (data) => async (dispatch) => {
+  const config = {
+    'Content-Type': 'application/json',
+  };
+  const body = data;
+  await axios({
+    method: 'POST',
+    url: BACKEND_URL + 'account/edit-customer-repayment',
+    data: body,
+    headers: config,
+  })
+    .then((response) => {
+      if (response.data.statuscode === 200) {
+        dispatch(listCustomers(data.customer_id));
+        dispatch({
+          type: SET_ALERT_CUSTOMER,
+          payload: {
+            isError: true,
+            isErrorType: 'SUCCESS_EXPENSE',
+            errMessage: response.data.message,
+          },
+        });
+        clearTimeout(userAlet);
+        userAlet = setTimeout(() => {
+          dispatch({
+            type: SET_ALERT_CUSTOMER,
+            payload: {
+              isError: false,
+              isErrorType: null,
+              errMessage: null,
+            },
+          });
+        }, 100);
+      } else {
+        dispatch({
+          type: SET_ALERT_CUSTOMER,
+          payload: {
+            isError: true,
+            isErrorType: 'FAIL',
+            errMessage: response.data.message,
+          },
+        });
+        clearTimeout(userAlet);
+        userAlet = setTimeout(() => {
+          dispatch({
+            type: SET_ALERT_CUSTOMER,
+            payload: {
+              isError: false,
+              isErrorType: null,
+              errMessage: null,
+            },
+          });
+        }, 100);
+      }
+    })
+    .catch((error) => {
+      dispatch({
+        type: SET_ALERT_CUSTOMER,
+        payload: {
+          isError: true,
+          isErrorType: 'FAIL',
+          errMessage: 'Something went wrong! Please try again later',
+        },
+      });
+      clearTimeout(userAlet);
+      userAlet = setTimeout(() => {
+        dispatch({
+          type: SET_ALERT_CUSTOMER,
+          payload: {
+            isError: false,
+            isErrorType: null,
+            errMessage: null,
+          },
+        });
+      }, 100);
+    });
+};
+
+export const deleteRepayment = (data) => async (dispatch) => {
+  const config = {
+    'Content-Type': 'application/json',
+  };
+  const body = data;
+  await axios({
+    method: 'POST',
+    url: BACKEND_URL + 'account/delete-customer-repayment',
+    data: body,
+    headers: config,
+  })
+    .then((response) => {
+      if (response.data.statuscode === 200) {
+        dispatch(listCustomers(data.customer_id));
         dispatch({
           type: SET_ALERT_CUSTOMER,
           payload: {
@@ -755,7 +989,7 @@ export const addCommission = (data) => async (dispatch) => {
   })
     .then((response) => {
       if (response.data.statuscode === 200) {
-        dispatch(listCustomers(data.project_id));
+        dispatch(listCustomers(data.customer_id));
         dispatch({
           type: SET_ALERT_CUSTOMER,
           payload: {
@@ -833,7 +1067,7 @@ export const editCommission = (data) => async (dispatch) => {
   })
     .then((response) => {
       if (response.data.statuscode === 200) {
-        dispatch(listCustomers(data.project_id));
+        dispatch(listCustomers(data.customer_id));
         dispatch({
           type: SET_ALERT_CUSTOMER,
           payload: {
@@ -911,7 +1145,85 @@ export const deleteCommission = (data) => async (dispatch) => {
   })
     .then((response) => {
       if (response.data.statuscode === 200) {
-        dispatch(listCustomers(data.project_id));
+        dispatch(listCustomers(data.customer_id));
+        dispatch({
+          type: SET_ALERT_CUSTOMER,
+          payload: {
+            isError: true,
+            isErrorType: 'SUCCESS_EXPENSE',
+            errMessage: response.data.message,
+          },
+        });
+        clearTimeout(userAlet);
+        userAlet = setTimeout(() => {
+          dispatch({
+            type: SET_ALERT_CUSTOMER,
+            payload: {
+              isError: false,
+              isErrorType: null,
+              errMessage: null,
+            },
+          });
+        }, 100);
+      } else {
+        dispatch({
+          type: SET_ALERT_CUSTOMER,
+          payload: {
+            isError: true,
+            isErrorType: 'FAIL',
+            errMessage: response.data.message,
+          },
+        });
+        clearTimeout(userAlet);
+        userAlet = setTimeout(() => {
+          dispatch({
+            type: SET_ALERT_CUSTOMER,
+            payload: {
+              isError: false,
+              isErrorType: null,
+              errMessage: null,
+            },
+          });
+        }, 100);
+      }
+    })
+    .catch((error) => {
+      dispatch({
+        type: SET_ALERT_CUSTOMER,
+        payload: {
+          isError: true,
+          isErrorType: 'FAIL',
+          errMessage: 'Something went wrong! Please try again later',
+        },
+      });
+      clearTimeout(userAlet);
+      userAlet = setTimeout(() => {
+        dispatch({
+          type: SET_ALERT_CUSTOMER,
+          payload: {
+            isError: false,
+            isErrorType: null,
+            errMessage: null,
+          },
+        });
+      }, 100);
+    });
+};
+
+export const markCustomer = (data) => async (dispatch) => {
+  const config = {
+    'Content-Type': 'application/json',
+  };
+  const body = data;
+  await axios({
+    method: 'POST',
+    url: BACKEND_URL + 'account/edit-customer-status',
+    data: body,
+    headers: config,
+  })
+    .then((response) => {
+      if (response.data.statuscode === 200) {
+        dispatch(listCustomers(data.id));
         dispatch({
           type: SET_ALERT_CUSTOMER,
           payload: {

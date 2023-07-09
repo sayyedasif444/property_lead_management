@@ -2,6 +2,7 @@ import {
   Button,
   Card,
   Col,
+  DatePicker,
   Input,
   message,
   Popconfirm,
@@ -26,6 +27,7 @@ import {
   deleteTransaction,
   listTransaction,
 } from '../../../apis/dashboard/transaction';
+const { RangePicker } = DatePicker;
 
 const Index = ({
   data,
@@ -40,6 +42,7 @@ const Index = ({
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleedit, setModalVisibleedit] = useState(false);
+  const [fromDate, setfromDate] = useState(null);
 
   const columns = [
     {
@@ -47,6 +50,7 @@ const Index = ({
       dataIndex: 'srno',
       innerWidth: '24px',
       key: 'srno',
+      width: '70px',
     },
     {
       title: 'Name',
@@ -59,9 +63,22 @@ const Index = ({
       key: 'particular',
     },
     {
-      title: 'Date',
+      title: 'Last Payment Date',
+      dataIndex: 'date_last',
+      key: 'date_last',
+      width: '170px',
+    },
+    {
+      title: 'Last Payment',
+      dataIndex: 'last_payment',
+      key: 'last_payment',
+      width: '140px',
+    },
+    {
+      title: 'Expected Date',
       dataIndex: 'date',
       key: 'date',
+      width: '140px',
     },
     {
       title: 'Credit',
@@ -77,6 +94,7 @@ const Index = ({
       title: 'Actions',
       dataIndex: 'action',
       key: 'x',
+      width: '100px',
     },
   ];
 
@@ -106,6 +124,9 @@ const Index = ({
       if (search !== '' && search !== null) {
         result = data.filter(
           (item) =>
+            (item.name !== null
+              ? item.name.toLowerCase().indexOf(search.toLowerCase()) > -1
+              : false) ||
             (item.credit !== null
               ? item.credit.toLowerCase().indexOf(search.toLowerCase()) > -1
               : false) ||
@@ -121,22 +142,20 @@ const Index = ({
       let credit = 0;
       let debit = 0;
       result.forEach((element, index) => {
-        credit +=
-          element.credit !== null && element.credit !== ''
-            ? parseFloat(element.credit)
-            : 0;
-        debit +=
-          element.debit !== null && element.debit !== ''
-            ? parseFloat(element.debit)
-            : 0;
         dataset.push({
           key: index + 1,
           srno: index + 1,
           name: element.name,
           particular: element.particular,
+          datezz: element.date,
           date: moment(element.date).format('DD-MM-YYYY'),
           debit: element.debit,
           credit: element.credit,
+          date_last:
+            element.date_last !== '' && element.date_last !== null
+              ? moment(element.date_last).format('DD-MM-YYYY')
+              : '',
+          last_payment: element.last_payment,
           action: (
             <div>
               <Tooltip title='Edit'>
@@ -177,11 +196,29 @@ const Index = ({
           ),
         });
       });
+
+      if (fromDate !== null) {
+        dataset = dataset.filter(
+          (ele) =>
+            moment(ele.datezz) >= fromDate[0] &&
+            moment(ele.datezz) <= fromDate[1]
+        );
+      }
+      dataset.forEach((element) => {
+        credit +=
+          element.credit !== null && element.credit !== ''
+            ? parseFloat(element.credit)
+            : 0;
+        debit +=
+          element.debit !== null && element.debit !== ''
+            ? parseFloat(element.debit)
+            : 0;
+      });
       setcredit(credit);
       setdebit(debit);
       setsearchData(dataset);
     }
-  }, [data, search, deleteTransaction]);
+  }, [data, search, deleteTransaction, fromDate]);
 
   return (
     <div>
@@ -194,7 +231,15 @@ const Index = ({
               onChange={(e) => setsearch(e.target.value)}
             />
           </Col>
-
+          <Col sm={10} md={8} lg={7} className='text-left mb-3 pl-2'>
+            <RangePicker
+              format='DD-MM-YYYY'
+              onChange={(e, date) => {
+                setfromDate(e);
+                // onChange(e, date);
+              }}
+            />
+          </Col>
           <Col sm={6} md={10} lg={12} className='text-right mb-3 ml-auto'>
             <Button
               type='primary '
@@ -207,6 +252,7 @@ const Index = ({
           <Col sm={24} md={24} lg={24}>
             <Table
               onChange={(pagination, filters, sorter, extra) => {
+                console.log(extra);
                 let credit = 0;
                 let debit = 0;
                 extra.currentDataSource.forEach((ele) => {
@@ -224,6 +270,7 @@ const Index = ({
               columns={columns}
               dataSource={searchData}
               loading={loading}
+              scroll={{ x: 1200 }}
             />
             <h5 style={{ marginTop: '-40px' }} className='pl-3'>
               Credited: {credit} {' / '}

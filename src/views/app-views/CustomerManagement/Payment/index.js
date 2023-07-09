@@ -155,6 +155,11 @@ const Index = ({
         });
       });
       setamount(amount);
+      dataset.sort(function(a,b){
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return new Date(b.datezz) - new Date(a.datezz);
+      });
       setsearchData(dataset);
     }
   }, [data, deletePayment]);

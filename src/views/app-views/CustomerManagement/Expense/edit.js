@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col, Modal, Form, Input, Button, DatePicker, Select } from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { editExpenseP } from '../../../../apis/dashboard/Project';
+import { editExpenseP } from '../../../../apis/dashboard/Customer';
 import moment from 'moment';
 
 const AddUser = ({
@@ -18,7 +18,7 @@ const AddUser = ({
   const onSubmit = (values) => {
     values.mode = JSON.stringify(mode);
     values.id = editPaymentData.id;
-    values.project_id = editPaymentData.project_id;
+    values.customer_id = editPaymentData.customer_id;
     editExpenseP(values);
   };
   const [mode, setmode] = useState({
@@ -311,9 +311,9 @@ AddUser.propTypes = {
   editPaymentData: PropTypes.any,
 };
 const mapStateToProps = (state) => ({
-  isError: state.project.isError,
-  errMessage: state.project.errMessage,
-  isErrorType: state.project.isErrorType,
-  category: state.project.category,
+  isError: state.customer.isError,
+  errMessage: state.customer.errMessage,
+  isErrorType: state.customer.isErrorType,
+  category: state.customer.category,
 });
 export default connect(mapStateToProps, { editExpenseP })(AddUser);

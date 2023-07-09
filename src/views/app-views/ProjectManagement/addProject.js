@@ -61,6 +61,15 @@ const AddUser = ({
           </Col>
           <Col span={6}>
             <Form.Item
+              name='broker'
+              style={{ width: '100%' }}
+              label={<span>Broker</span>}
+            >
+              <Input placeholder='Broker' />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item
               name='mobile_no'
               style={{ width: '100%' }}
               label={<span>Mobile Number</span>}
@@ -74,7 +83,7 @@ const AddUser = ({
               <Input placeholder='Mobile Number' />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col span={6}>
             <Form.Item
               name='address'
               style={{ width: '100%' }}

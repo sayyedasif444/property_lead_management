@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import { deletePayment } from '../../../../apis/dashboard/Project';
+import { deleteExpenseP } from '../../../../apis/dashboard/Project';
 
 const Index = ({
   data,
@@ -20,7 +20,7 @@ const Index = ({
   errMessage,
   isError,
   isErrorType,
-  deletePayment,
+  deleteExpenseP,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleedit, setModalVisibleedit] = useState(false);
@@ -132,7 +132,7 @@ const Index = ({
               <Popconfirm
                 title='Are you sure?'
                 onConfirm={(e) => {
-                  deletePayment({ id: element.id, project_id: data.id });
+                  deleteExpenseP({ id: element.id, project_id: data.id });
                 }}
                 okText='Yes'
                 cancelText='No'
@@ -157,7 +157,7 @@ const Index = ({
       setamount(amount);
       setsearchData(dataset);
     }
-  }, [data, deletePayment]);
+  }, [data, deleteExpenseP]);
 
   return (
     <div>
@@ -207,4 +207,4 @@ const mapStateToProps = (state) => ({
   data: state.project.singleData,
   isAuthenticated: state.auth.isAuthenticated,
 });
-export default connect(mapStateToProps, { deletePayment })(Index);
+export default connect(mapStateToProps, { deleteExpenseP })(Index);

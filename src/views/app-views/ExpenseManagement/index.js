@@ -10,9 +10,10 @@ import {
   Table,
   Tooltip,
 } from 'antd';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   PlusCircleOutlined,
+  DownloadOutlined,
   EditOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
@@ -31,6 +32,7 @@ import {
   listExpense,
   listExpenseCategory,
 } from '../../../apis/dashboard/expense';
+import jsPDF from 'jspdf';
 const { RangePicker } = DatePicker;
 
 const Index = ({
@@ -169,6 +171,7 @@ const Index = ({
 
   const [searchData, setsearchData] = useState([]);
   const [search, setsearch] = useState('');
+  const [changedVal, setchangedVal] = useState([]);
 
   useEffect(() => {
     if (isError && isErrorType === 'SUCCESS_EXPENSE') {
@@ -202,10 +205,7 @@ const Index = ({
       var sum = 0;
       result.forEach((element, index) => {
         let mode = JSON.parse(element.mode);
-        sum +=
-          element.amount !== null || element.amout !== ''
-            ? parseFloat(element.amount)
-            : 0;
+
         dataset.push({
           key: index + 1,
           srno: index + 1,
@@ -218,6 +218,7 @@ const Index = ({
           transaction: mode !== null ? mode.mode : '',
           datezz: element.date_of_expense,
           amount: 'Rs: ' + element.amount,
+          amounts: element.amount,
           price:
             element.amount !== null || element.amout !== ''
               ? element.amount
@@ -291,7 +292,6 @@ const Index = ({
           ),
         });
       });
-      settotal(sum);
       if (fromDate !== null) {
         dataset = dataset.filter(
           (ele) =>
@@ -299,9 +299,79 @@ const Index = ({
             moment(ele.datezz) <= fromDate[1]
         );
       }
+      dataset.forEach((element) => {
+        sum +=
+          element.amounts !== null || element.amounts !== ''
+            ? parseFloat(element.amounts)
+            : 0;
+      });
+      settotal(sum);
+      setchangedVal(dataset);
       setsearchData(dataset);
     }
   }, [data, search, deleteExpense, fromDate]);
+  const pdfRef = useRef(null);
+  const styles = {
+    page: {
+      marginTop: '10px',
+      marginLeft: '20px',
+      marginRight: '10px',
+      width: '100%',
+      pageBreakAfter: 'always',
+      fontSize: '8px',
+    },
+
+    columnLayout: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      margin: '3rem 0 5rem 0',
+      gap: '2rem',
+    },
+
+    column: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
+
+    spacer2: {
+      height: '2rem',
+    },
+
+    fullWidth: {
+      width: '410px',
+      color: '#000000',
+    },
+
+    color: {
+      color: '#000000',
+    },
+
+    marginb0: {
+      marginBottom: 0,
+    },
+  };
+
+  const handleDownload = () => {
+    const doc = new jsPDF({
+      format: 'a4',
+      fontSize: '10px',
+      unit: 'px',
+      externals: {
+        // only define the dependencies you are NOT using as externals!
+        canvg: 'canvg',
+        html2canvas: 'html2canvas',
+        dompurify: 'dompurify',
+        pagebreak: { mode: 'avoid-all', after: '.avoidThisRow' },
+      },
+    });
+    // Adding the fonts.
+    doc.setFont('Inter-Regular', 'normal', 9);
+    doc.html(pdfRef.current, {
+      async callback(doc) {
+        await doc.save('expense');
+      },
+    });
+  };
 
   return (
     <div>
@@ -325,6 +395,12 @@ const Index = ({
           </Col>
           <Col sm={6} md={10} lg={12} className='text-right mb-3'>
             <Button
+              type='primary mr-2'
+              danger
+              icon={<DownloadOutlined />}
+              onClick={(e) => handleDownload(true)}
+            ></Button>
+            <Button
               type='primary '
               icon={<PlusCircleOutlined />}
               onClick={(e) => setModalVisible(true)}
@@ -336,6 +412,7 @@ const Index = ({
             <Table
               onChange={(pagination, filters, sorter, extra) => {
                 var sum = 0;
+                setchangedVal(extra.currentDataSource);
                 extra.currentDataSource.forEach((ele) => {
                   if (ele.price !== '') {
                     sum += parseFloat(ele.price);
@@ -348,10 +425,132 @@ const Index = ({
               dataSource={searchData}
               loading={loading}
             />
-            <h5 style={{ marginTop: '-40px' }} className='pl-3'>Total Expenses: {total}</h5>
+            <h5 style={{ marginTop: '-40px' }} className='pl-3'>
+              Total Expenses: {total}
+            </h5>
           </Col>
         </Row>
       </Card>
+      <div style={{ display: 'none' }}>
+        <div ref={pdfRef} style={styles.page}>
+          <h4 style={styles.fullWidth}>Expense: </h4>
+          {changedVal.length > 0 && (
+            <div>
+              <div style={styles.fullWidth}>
+                <table style={styles.fullWidth}>
+                  <tbody>
+                    <tr
+                      style={{
+                        border: 'thin solid #DCDCDC',
+                        borderBottom: 'thin solid #DCDCDC',
+                        width: '120px',
+                      }}
+                    >
+                      <th
+                        style={{
+                          width: '120px',
+                          borderRight: 'thin solid #DCDCDC',
+                          textAlign: 'left',
+                          padding: '6px',
+                        }}
+                      >
+                        Particular
+                      </th>
+                      <th
+                        style={{
+                          width: '120px',
+                          borderRight: 'thin solid #DCDCDC',
+                          textAlign: 'left',
+                          padding: '6px',
+                        }}
+                      >
+                        Date
+                      </th>
+                      <th
+                        style={{
+                          width: '120px',
+                          borderRight: 'thin solid #DCDCDC',
+                          textAlign: 'left',
+                          padding: '6px',
+                        }}
+                      >
+                        Amount
+                      </th>
+                      <th
+                        style={{
+                          width: '120px',
+                          borderRight: 'thin solid #DCDCDC',
+                          textAlign: 'left',
+                          padding: '6px',
+                        }}
+                      >
+                        Mode
+                      </th>
+                    </tr>
+                    {changedVal.map((ele) => (
+                      <tr
+                        style={{
+                          border: 'thin solid #DCDCDC',
+                          borderBottom: 'thin solid #DCDCDC',
+                          width: '120px',
+                        }}
+                      >
+                        <td
+                          style={{
+                            width: '120px',
+                            borderRight: 'thin solid #DCDCDC',
+                            textAlign: 'left',
+                            padding: '6px',
+                          }}
+                        >
+                          {ele.particular}
+                        </td>
+                        <td
+                          style={{
+                            width: '120px',
+                            borderRight: 'thin solid #DCDCDC',
+                            textAlign: 'left',
+                            padding: '6px',
+                          }}
+                        >
+                          {ele.date !== null && ele.date.substring(0, 10)}
+                        </td>
+                        <td
+                          style={{
+                            width: '120px',
+                            borderRight: 'thin solid #DCDCDC',
+                            textAlign: 'left',
+                            padding: '6px',
+                          }}
+                        >
+                          {ele.amount}
+                        </td>
+                        <td
+                          style={{
+                            width: '120px',
+                            borderRight: 'thin solid #DCDCDC',
+                            textAlign: 'left',
+                            padding: '6px',
+                          }}
+                        >
+                          {ele.mode}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <h5 className='' style={{ width: '410px', fontSize: '9px' }}>
+                  Total Expense:{' '}
+                  {changedVal.reduce((accumulator, object) => {
+                    return accumulator + parseFloat(object.amounts);
+                  }, 0)}
+                </h5>
+              </div>
+            </div>
+          )}
+          <div className='avoidThisRow'></div>
+        </div>
+      </div>
       <AddExpense
         visible={modalVisible}
         cancel={setModalVisible}

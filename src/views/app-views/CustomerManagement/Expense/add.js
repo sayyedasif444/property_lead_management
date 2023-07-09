@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col, Modal, Form, Input, Button, DatePicker, Select } from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addExpenseP } from '../../../../apis/dashboard/Project';
+import { addExpenseP } from '../../../../apis/dashboard/Customer';
 
 const AddUser = ({
   visible,
@@ -15,7 +15,7 @@ const AddUser = ({
 }) => {
   const [form] = Form.useForm();
   const onSubmit = (values) => {
-    values.project_id = singleData.id;
+    values.customer_id = singleData.id;
     values.mode = JSON.stringify(mode);
     addExpenseP(values);
   };
@@ -286,9 +286,9 @@ AddUser.propTypes = {
   singleData: PropTypes.any,
 };
 const mapStateToProps = (state) => ({
-  isError: state.project.isError,
-  errMessage: state.project.errMessage,
-  isErrorType: state.project.isErrorType,
-  singleData: state.project.singleData,
+  isError: state.customer.isError,
+  errMessage: state.customer.errMessage,
+  isErrorType: state.customer.isErrorType,
+  singleData: state.customer.singleData,
 });
 export default connect(mapStateToProps, { addExpenseP })(AddUser);

@@ -156,6 +156,12 @@ const ViewProperty = ({ singleData, errMessage, isError, isErrorType }) => {
                     : '-'}
                 </p>
               </Col>
+              <Col sm={6} className='border p-2'>
+                <h5 className='mb-0'>Broker</h5>
+                <p className='mb-0'>
+                  {singleData.broker !== null ? singleData.broker : '-'}
+                </p>
+              </Col>
             </Row>
           </Col>
         </Row>

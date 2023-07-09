@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import { deletePayment } from '../../../../apis/dashboard/Project';
+import { deleteExpenseP } from '../../../../apis/dashboard/Customer';
 
 const Index = ({
   data,
@@ -20,7 +20,7 @@ const Index = ({
   errMessage,
   isError,
   isErrorType,
-  deletePayment,
+  deleteExpenseP,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleedit, setModalVisibleedit] = useState(false);
@@ -61,6 +61,7 @@ const Index = ({
   ];
 
   const [searchData, setsearchData] = useState([]);
+  const [amount, setamount] = useState(0);
 
   useEffect(() => {
     if (isError && isErrorType === 'SUCCESS_EXPENSE') {
@@ -71,11 +72,16 @@ const Index = ({
   }, [isError, isErrorType, errMessage]);
 
   useEffect(() => {
-    if (data.projectExpenses !== null) {
-      var result = data.projectExpenses;
+    if (data.customerExpenses !== null) {
+      var result = data.customerExpenses;
       var dataset = [];
+      let amount = 0;
       result.forEach((element, index) => {
         let mode = JSON.parse(element.mode);
+        amount +=
+          element.amount !== '' && element.amount !== null
+            ? parseFloat(element.amount)
+            : 0;
         dataset.push({
           key: index + 1,
           srno: index + 1,
@@ -126,7 +132,7 @@ const Index = ({
               <Popconfirm
                 title='Are you sure?'
                 onConfirm={(e) => {
-                  deletePayment({ id: element.id, project_id: data.id });
+                  deleteExpenseP({ id: element.id, customer_id: data.id });
                 }}
                 okText='Yes'
                 cancelText='No'
@@ -148,10 +154,10 @@ const Index = ({
           ),
         });
       });
-
+      setamount(amount);
       setsearchData(dataset);
     }
-  }, [data, deletePayment]);
+  }, [data, deleteExpenseP]);
 
   return (
     <div>
@@ -182,6 +188,7 @@ const Index = ({
             loading={loading}
             pagination={false}
           />
+          <h5 className='pl-2 pt-2'>Total Expenses: {amount}</h5>
         </Col>
       </Row>
       <Add visible={modalVisible} cancel={setModalVisible} />
@@ -197,7 +204,7 @@ Index.propTypes = {
   data: PropTypes.any,
 };
 const mapStateToProps = (state) => ({
-  data: state.project.singleData,
+  data: state.customer.singleData,
   isAuthenticated: state.auth.isAuthenticated,
 });
-export default connect(mapStateToProps, { deletePayment })(Index);
+export default connect(mapStateToProps, { deleteExpenseP })(Index);

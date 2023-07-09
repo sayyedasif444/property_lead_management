@@ -16,7 +16,7 @@ const AddUser = ({
 }) => {
   const [form] = Form.useForm();
   const onSubmit = (values) => {
-    values.id = dataset.id
+    values.id = dataset.id;
     editTransaction(values);
   };
 
@@ -27,10 +27,15 @@ const AddUser = ({
         particular: dataset.particular !== null ? dataset.particular : '',
         date:
           dataset.date !== null
-            ? moment(new Date(dataset.date.substring(0,10)))
+            ? moment(new Date(dataset.date.substring(0, 10)))
+            : '',
+        date_last:
+          dataset.date_last !== null
+            ? moment(new Date(dataset.date_last.substring(0, 10)))
             : '',
         credit: dataset.credit !== null ? dataset.credit : '',
         debit: dataset.debit !== null ? dataset.debit : '',
+        last_payment: dataset.last_payment !== null ? dataset.last_payment : '',
       });
     }
   }, [dataset, form, visible]);
@@ -90,7 +95,7 @@ const AddUser = ({
             <Form.Item
               name='date'
               style={{ width: '100%' }}
-              label={<span>Date</span>}
+              label={<span>Expected Date</span>}
               rules={[
                 {
                   required: true,
@@ -117,6 +122,24 @@ const AddUser = ({
               label={<span>Debit</span>}
             >
               <Input placeholder='Debit' />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='last_payment'
+              style={{ width: '100%' }}
+              label={<span>Last Payment</span>}
+            >
+              <Input placeholder='Last Payment' />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='date_last'
+              style={{ width: '100%' }}
+              label={<span>Last Payment Date</span>}
+            >
+              <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
             </Form.Item>
           </Col>
         </Row>

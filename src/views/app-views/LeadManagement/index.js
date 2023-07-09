@@ -531,23 +531,46 @@ const Index = ({
           ),
           actions: (
             <div onClick={(e) => e.stopPropagation()}>
-              <Tooltip title='Edit'>
-                <Link to='#!'>
-                  <EditOutlined
-                    className='text-primary'
-                    style={{ fontSize: '16px' }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setModalVisibleedit(true);
-                      store.dispatch({
-                        type: SET_SIGNLE_LEAD,
-                        payload: element,
-                      });
-                    }}
-                  />
-                </Link>
-              </Tooltip>
+              {sessionStorage.getItem('user_type').toLowerCase() === 'user' ? (
+                element.user !== null &&
+                element.user.id === parseInt(sessionStorage.getItem('id')) && (
+                  <Tooltip title='Edit'>
+                    <Link to='#!'>
+                      <EditOutlined
+                        className='text-primary'
+                        style={{ fontSize: '16px' }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setModalVisibleedit(true);
+                          store.dispatch({
+                            type: SET_SIGNLE_LEAD,
+                            payload: element,
+                          });
+                        }}
+                      />
+                    </Link>
+                  </Tooltip>
+                )
+              ) : (
+                <Tooltip title='Edit'>
+                  <Link to='#!'>
+                    <EditOutlined
+                      className='text-primary'
+                      style={{ fontSize: '16px' }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setModalVisibleedit(true);
+                        store.dispatch({
+                          type: SET_SIGNLE_LEAD,
+                          payload: element,
+                        });
+                      }}
+                    />
+                  </Link>
+                </Tooltip>
+              )}
               <Tooltip title='Send WhatsApp Message'>
                 <a
                   href={'https://wa.me/' + element.mobile_number}
@@ -561,27 +584,54 @@ const Index = ({
                   />
                 </a>
               </Tooltip>
-              <Popconfirm
-                title='Are you sure?'
-                onConfirm={(e) => {
-                  deleteLead({ id: element.id });
-                }}
-                okText='Yes'
-                cancelText='No'
-              >
-                <Link
-                  to='#!'
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
+              {sessionStorage.getItem('user_type').toLowerCase() === 'user' ? (
+                element.user !== null &&
+                element.user.id === parseInt(sessionStorage.getItem('id')) && (
+                  <Popconfirm
+                    title='Are you sure?'
+                    onConfirm={(e) => {
+                      deleteLead({ id: element.id });
+                    }}
+                    okText='Yes'
+                    cancelText='No'
+                  >
+                    <Link
+                      to='#!'
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                    >
+                      <DeleteOutlined
+                        className='text-danger ml-4 '
+                        style={{ fontSize: '16px' }}
+                      />
+                    </Link>
+                  </Popconfirm>
+                )
+              ) : (
+                <Popconfirm
+                  title='Are you sure?'
+                  onConfirm={(e) => {
+                    deleteLead({ id: element.id });
                   }}
+                  okText='Yes'
+                  cancelText='No'
                 >
-                  <DeleteOutlined
-                    className='text-danger ml-4 '
-                    style={{ fontSize: '16px' }}
-                  />
-                </Link>
-              </Popconfirm>
+                  <Link
+                    to='#!'
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                  >
+                    <DeleteOutlined
+                      className='text-danger ml-4 '
+                      style={{ fontSize: '16px' }}
+                    />
+                  </Link>
+                </Popconfirm>
+              )}
             </div>
           ),
         });

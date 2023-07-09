@@ -6,6 +6,7 @@ import {
   message,
   Popconfirm,
   Row,
+  Switch,
   Table,
   Tooltip,
 } from 'antd';
@@ -27,6 +28,7 @@ import AddCategory from './addCategory';
 import {
   deleteCustomer,
   listCustomers,
+  markCustomer,
 } from '../../../apis/dashboard/Customer';
 
 const Index = ({
@@ -38,6 +40,7 @@ const Index = ({
   isAuthenticated,
   deleteCustomer,
   listCustomers,
+  markCustomer,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleedit, setModalVisibleedit] = useState(false);
@@ -74,6 +77,11 @@ const Index = ({
       title: 'Total Amount',
       dataIndex: 'amount',
       key: 'amount',
+    },
+    {
+      title: 'Completed',
+      dataIndex: 'isCompleted',
+      key: 'isCompleted',
     },
     {
       title: 'Actions',
@@ -137,6 +145,23 @@ const Index = ({
           address: element.address,
           plot_location: element.plot_location,
           amount: element.total_amount,
+          isCompleted: (
+            <span onClick={(e) => e.stopPropagation()}>
+              <Popconfirm
+                title='Are you sure?'
+                onConfirm={(e) => {
+                  markCustomer({
+                    id: element.id,
+                    isActive: !element.isActive,
+                  });
+                }}
+                okText='Yes'
+                cancelText='No'
+              >
+                <Switch checked={element.isActive} />
+              </Popconfirm>
+            </span>
+          ),
           action: (
             <div onClick={(e) => e.stopPropagation()}>
               <Tooltip title='Edit'>
@@ -184,7 +209,7 @@ const Index = ({
 
       setsearchData(dataset);
     }
-  }, [data, search, deleteCustomer]);
+  }, [data, search, deleteCustomer, markCustomer]);
 
   return (
     <div>
@@ -223,7 +248,7 @@ const Index = ({
               className='border'
               columns={columns}
               dataSource={searchData}
-              scroll={{ x: 1000 }}
+              scroll={{ x: 1100 }}
               loading={loading}
             />
           </Col>
@@ -270,4 +295,5 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   deleteCustomer,
   listCustomers,
+  markCustomer,
 })(Index);

@@ -42,6 +42,7 @@ const AddUser = ({
         total_amount:
           singleData.total_amount !== null ? singleData.total_amount : '',
         duration: singleData.duration !== null ? singleData.duration : '',
+        broker: singleData.broker !== null ? singleData.broker : '',
         date_of_agreement:
           singleData.date_of_agreement !== null
             ? moment(singleData.date_of_agreement)
@@ -92,6 +93,15 @@ const AddUser = ({
           </Col>
           <Col span={6}>
             <Form.Item
+              name='broker'
+              style={{ width: '100%' }}
+              label={<span>Broker</span>}
+            >
+              <Input placeholder='Broker' />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item
               name='mobile_no'
               style={{ width: '100%' }}
               label={<span>Mobile Number</span>}
@@ -105,7 +115,7 @@ const AddUser = ({
               <Input placeholder='Mobile Number' />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col span={6}>
             <Form.Item
               name='address'
               style={{ width: '100%' }}
