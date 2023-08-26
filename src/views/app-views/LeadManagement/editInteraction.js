@@ -29,6 +29,7 @@ const AddUser = ({
   const onSubmit = (values) => {
     values.lead_id = singleData.id;
     values.id = singleInteraction.id;
+    values.i_date = new Date(values.i_date.format('YYYY-MM-DD'));
     editInteraction(values);
   };
 
@@ -37,7 +38,7 @@ const AddUser = ({
       form.setFieldsValue({
         i_date:
           singleInteraction.i_date !== null
-            ? moment(singleInteraction.i_date.substring(0, 10))
+            ? moment(singleInteraction.i_date)
             : '',
         i_time:
           singleInteraction.i_time !== null

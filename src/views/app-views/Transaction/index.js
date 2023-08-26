@@ -200,8 +200,10 @@ const Index = ({
       if (fromDate !== null) {
         dataset = dataset.filter(
           (ele) =>
-            moment(ele.datezz) >= fromDate[0] &&
-            moment(ele.datezz) <= fromDate[1]
+            moment(ele.datezz).format('YYYY-MM-DD') >=
+              fromDate[0].format('YYYY-MM-DD') &&
+            moment(ele.datezz).format('YYYY-MM-DD') <=
+              fromDate[1].format('YYYY-MM-DD')
         );
       }
       dataset.forEach((element) => {
@@ -216,7 +218,7 @@ const Index = ({
       });
       setcredit(credit);
       setdebit(debit);
-      setsearchData(dataset);
+      setsearchData(dataset.sort((a, b) => Number(new Date(b.datezz)) - Number(new Date(a.datezz))));
     }
   }, [data, search, deleteTransaction, fromDate]);
 

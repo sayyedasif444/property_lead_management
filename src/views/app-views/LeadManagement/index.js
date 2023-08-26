@@ -65,6 +65,7 @@ const Index = ({
   const [modalVisibleInteraction, setmodalVisibleInteraction] = useState(false);
   const [modalVisibleAction, setmodalVisibleAction] = useState(false);
   const [columns, setcolumns] = useState([]);
+  const [arrivalChange, setarrivalChange] = useState(null);
 
   useEffect(() => {
     setcolumns([
@@ -438,7 +439,7 @@ const Index = ({
           action_bool: element.actions.length > 0,
           client: element.first_name + ' ' + element.last_name,
           source: element.source !== null ? element.source.source : '',
-          created_at: element.createdAt.substr(0, 10),
+          created_at: element.createdAt.substr(0, 8),
           poc:
             element.user !== null
               ? element.user.first_name + ' ' + element.user.last_name
@@ -512,6 +513,14 @@ const Index = ({
                 : 'Add'}
             </Link>
           ),
+          arrivalDate:
+            element.actions.filter((ele) => ele.isArrival).length > 0
+              ? moment(
+                  element.actions
+                    .sort((a, b) => parseFloat(b.id) - parseFloat(a.id))[0]
+                    .i_date.substr(0, 10)
+                ).format('YYYY-MM-DD')
+              : null,
           isComplete: (
             <span onClick={(e) => e.stopPropagation()}>
               <Popconfirm
@@ -643,22 +652,25 @@ const Index = ({
             moment(ele.created_at) <= fromDate[1]
         );
       }
+      if (arrivalChange !== null) {
+        dataset = dataset.filter((ele) => ele.arrivalDate === arrivalChange.format('YYYY-MM-DD'));
+      }
       setsearchData(dataset);
     }
-  }, [data, search, deleteLead, markLead, fromDate]);
+  }, [data, search, deleteLead, markLead, fromDate, arrivalChange]);
 
   return (
     <div>
       <Card>
         <Row>
-          <Col sm={8} md={6} lg={5} className='text-left mb-3'>
+          <Col sm={12} md={8} lg={5} className='text-left mb-3'>
             <Input
               placeholder='Search'
               value={search}
               onChange={(e) => setsearch(e.target.value)}
             />
           </Col>
-          <Col sm={10} md={8} lg={7} className='text-left mb-3 pl-2'>
+          <Col sm={12} md={8} lg={6} className='text-left mb-3 pl-2'>
             <RangePicker
               format='DD-MM-YYYY'
               onChange={(e, date) => {
@@ -667,7 +679,16 @@ const Index = ({
               }}
             />
           </Col>
-          <Col sm={6} md={10} lg={12} className='text-right mb-3'>
+          <Col sm={12} md={8} lg={10} className='text-right mb-3 pl-2'>
+            <DatePicker
+              style={{ width: '200px' }}
+              onChange={(e, date) => {
+                setarrivalChange(e);
+              }}
+              format={'DD-MM-YYYY'}
+            />
+          </Col>
+          <Col sm={12} md={8} lg={3} className='text-right mb-3'>
             <Button
               type='primary '
               icon={<PlusCircleOutlined />}

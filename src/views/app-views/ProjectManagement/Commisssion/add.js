@@ -44,7 +44,7 @@ const AddUser = ({
 
   return (
     <Modal
-      title='Add Investor'
+      title='Add Commission'
       visible={visible}
       centered
       footer={null}

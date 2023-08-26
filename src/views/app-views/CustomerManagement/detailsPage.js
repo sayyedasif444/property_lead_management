@@ -12,6 +12,7 @@ import Repayments from './Repayments';
 import { jsPDF } from 'jspdf';
 
 const ViewProperty = ({ singleData, errMessage, isError, isErrorType }) => {
+  console.log(singleData);
   const history = useHistory();
   useEffect(() => {
     if (singleData === null) {
@@ -768,7 +769,7 @@ const ViewProperty = ({ singleData, errMessage, isError, isErrorType }) => {
                         Mode
                       </th>
                     </tr>
-                    {singleData.paymentDetails.map((ele) => (
+                    {singleData.hasOwnProperty('paymentDetails') && singleData.paymentDetails.map((ele) => (
                       <tr
                         style={{
                           border: 'thin solid #DCDCDC',
@@ -895,57 +896,58 @@ const ViewProperty = ({ singleData, errMessage, isError, isErrorType }) => {
                         Mode
                       </th>
                     </tr>
-                    {singleData.customerRepayments.map((ele) => (
-                      <tr
-                        style={{
-                          border: 'thin solid #DCDCDC',
-                          borderBottom: 'thin solid #DCDCDC',
-                          width: '120px',
-                        }}
-                      >
-                        <td
+                    {singleData.hasOwnProperty('customerRepayments') &&
+                      singleData.customerRepayments.map((ele) => (
+                        <tr
                           style={{
+                            border: 'thin solid #DCDCDC',
+                            borderBottom: 'thin solid #DCDCDC',
                             width: '120px',
-                            borderRight: 'thin solid #DCDCDC',
-                            textAlign: 'left',
-                            padding: '6px',
                           }}
                         >
-                          {ele.payment_type}
-                        </td>
-                        <td
-                          style={{
-                            width: '120px',
-                            borderRight: 'thin solid #DCDCDC',
-                            textAlign: 'left',
-                            padding: '6px',
-                          }}
-                        >
-                          {ele.date_of_payment !== null &&
-                            ele.date_of_payment.substring(0, 10)}
-                        </td>
-                        <td
-                          style={{
-                            width: '120px',
-                            borderRight: 'thin solid #DCDCDC',
-                            textAlign: 'left',
-                            padding: '6px',
-                          }}
-                        >
-                          {ele.amount}
-                        </td>
-                        <td
-                          style={{
-                            width: '120px',
-                            borderRight: 'thin solid #DCDCDC',
-                            textAlign: 'left',
-                            padding: '6px',
-                          }}
-                        >
-                          {JSON.parse(ele.mode).mode}
-                        </td>
-                      </tr>
-                    ))}
+                          <td
+                            style={{
+                              width: '120px',
+                              borderRight: 'thin solid #DCDCDC',
+                              textAlign: 'left',
+                              padding: '6px',
+                            }}
+                          >
+                            {ele.payment_type}
+                          </td>
+                          <td
+                            style={{
+                              width: '120px',
+                              borderRight: 'thin solid #DCDCDC',
+                              textAlign: 'left',
+                              padding: '6px',
+                            }}
+                          >
+                            {ele.date_of_expense !== null &&
+                              ele.date_of_expense.substring(0, 10)}
+                          </td>
+                          <td
+                            style={{
+                              width: '120px',
+                              borderRight: 'thin solid #DCDCDC',
+                              textAlign: 'left',
+                              padding: '6px',
+                            }}
+                          >
+                            {ele.amount}
+                          </td>
+                          <td
+                            style={{
+                              width: '120px',
+                              borderRight: 'thin solid #DCDCDC',
+                              textAlign: 'left',
+                              padding: '6px',
+                            }}
+                          >
+                            {JSON.parse(ele.mode).mode}
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
                 <h5 className='' style={{ width: '410px', fontSize: '9px' }}>

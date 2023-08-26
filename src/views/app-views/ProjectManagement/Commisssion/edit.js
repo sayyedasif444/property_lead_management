@@ -69,7 +69,7 @@ const AddUser = ({
 
   return (
     <Modal
-      title='Edit Expense'
+      title='Edit Commission'
       visible={visible}
       centered
       footer={null}

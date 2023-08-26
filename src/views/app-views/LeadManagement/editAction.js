@@ -31,6 +31,7 @@ const AddUser = ({
   const onSubmit = (values) => {
     values.lead_id = singleData.id;
     values.id = singleAction.id;
+    values.i_date = new Date(values.i_date.format('YYYY-MM-DD'));
     editAction(values);
   };
 

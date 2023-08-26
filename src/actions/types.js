@@ -1,10 +1,19 @@
 //Dev URL
-export const BACKEND_URL = 'http://localhost:5000/api/';
+export const BACKEND_URL = 'https://crm-backend.bodhirealestate.in/api/';
 export const BACKEND_URL_MEDIA =
-  'http://localhost:5000/uploads/';
-export const FRONT_END_URL = 'http://localhost:5000/uploads/';
+  'https://crm-backend.bodhirealestate.in/uploads/';
+export const FRONT_END_URL = 'https://crm-backend.bodhirealestate.in/uploads/';
 export const BACKEND_URL_PDF =
-  'http://localhost:5000/property/';
+  'https://crm-backend.bodhirealestate.in/property/';
+
+// export const BACKEND_URL =
+//   'https://anis-property-backend.asifsayyed.com/api/';
+// export const BACKEND_URL_MEDIA =
+//   'https://anis-property-backend.asifsayyed.com/uploads/';
+// export const FRONT_END_URL =
+//   'https://anis-property-backend.asifsayyed.com/uploads/';
+// export const BACKEND_URL_PDF =
+//   'https://crm-backend.asifsayyed.com/property/';
 
 // export const BACKEND_URL = 'http://localhost:5000/api/';
 // export const BACKEND_URL_MEDIA = 'http://localhost:5000/uploads/';

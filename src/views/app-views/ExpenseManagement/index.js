@@ -52,8 +52,6 @@ const Index = ({
   const [categoryModel, setcategoryModel] = useState(false);
   const [fromDate, setfromDate] = useState(null);
 
-  const [total, settotal] = useState([]);
-
   const [columns, setcolumns] = useState([
     {
       title: 'Sr no',
@@ -72,9 +70,14 @@ const Index = ({
       key: 'date',
     },
     {
-      title: 'Amount',
-      dataIndex: 'amount',
-      key: 'amount',
+      title: 'Credit',
+      dataIndex: 'credit',
+      key: 'credit',
+    },
+    {
+      title: 'Debit',
+      dataIndex: 'debit',
+      key: 'debit',
     },
     {
       title: 'Mode',
@@ -113,9 +116,14 @@ const Index = ({
           key: 'date',
         },
         {
-          title: 'Amount',
-          dataIndex: 'amount',
-          key: 'amount',
+          title: 'Credit',
+          dataIndex: 'credit',
+          key: 'credit',
+        },
+        {
+          title: 'Debit',
+          dataIndex: 'debit',
+          key: 'debit',
         },
         {
           title: 'Mode',
@@ -202,10 +210,8 @@ const Index = ({
         );
       }
       var dataset = [];
-      var sum = 0;
       result.forEach((element, index) => {
         let mode = JSON.parse(element.mode);
-
         dataset.push({
           key: index + 1,
           srno: index + 1,
@@ -218,7 +224,10 @@ const Index = ({
           transaction: mode !== null ? mode.mode : '',
           datezz: element.date_of_expense,
           amount: 'Rs: ' + element.amount,
+          credit: element.type === 'Credit' ? 'Rs: ' + element.amount : '-',
+          debit: element.type === 'Debit' ? 'Rs: ' + element.amount : '-',
           amounts: element.amount,
+          type: element.type,
           price:
             element.amount !== null || element.amout !== ''
               ? element.amount
@@ -299,13 +308,6 @@ const Index = ({
             moment(ele.datezz) <= fromDate[1]
         );
       }
-      dataset.forEach((element) => {
-        sum +=
-          element.amounts !== null || element.amounts !== ''
-            ? parseFloat(element.amounts)
-            : 0;
-      });
-      settotal(sum);
       setchangedVal(dataset);
       setsearchData(dataset);
     }
@@ -411,22 +413,29 @@ const Index = ({
           <Col sm={24} md={24} lg={24}>
             <Table
               onChange={(pagination, filters, sorter, extra) => {
-                var sum = 0;
                 setchangedVal(extra.currentDataSource);
-                extra.currentDataSource.forEach((ele) => {
-                  if (ele.price !== '') {
-                    sum += parseFloat(ele.price);
-                  }
-                });
-                settotal(sum);
               }}
               className='border'
               columns={columns}
               dataSource={searchData}
               loading={loading}
             />
-            <h5 style={{ marginTop: '-40px' }} className='pl-3'>
-              Total Expenses: {total}
+            <h5 style={{ marginTop: '-60px' }} className='pl-3'>
+              Total Credit:{' '}
+              {changedVal.reduce((accumulator, object) => {
+                return (
+                  accumulator +
+                  parseFloat(object.type === 'Credit' ? object.amounts : 0)
+                );
+              }, 0)}
+              <br />
+              Total Debit:{' '}
+              {changedVal.reduce((accumulator, object) => {
+                return (
+                  accumulator +
+                  parseFloat(object.type === 'Debit' ? object.amounts : 0)
+                );
+              }, 0)}
             </h5>
           </Col>
         </Row>
@@ -474,7 +483,17 @@ const Index = ({
                           padding: '6px',
                         }}
                       >
-                        Amount
+                        Credit
+                      </th>
+                      <th
+                        style={{
+                          width: '120px',
+                          borderRight: 'thin solid #DCDCDC',
+                          textAlign: 'left',
+                          padding: '6px',
+                        }}
+                      >
+                        Debit
                       </th>
                       <th
                         style={{
@@ -487,13 +506,14 @@ const Index = ({
                         Mode
                       </th>
                     </tr>
-                    {changedVal.map((ele) => (
+                    {changedVal.map((ele, indz) => (
                       <tr
                         style={{
                           border: 'thin solid #DCDCDC',
                           borderBottom: 'thin solid #DCDCDC',
                           width: '120px',
                         }}
+                        key={indz}
                       >
                         <td
                           style={{
@@ -523,7 +543,17 @@ const Index = ({
                             padding: '6px',
                           }}
                         >
-                          {ele.amount}
+                          {ele.credit}
+                        </td>
+                        <td
+                          style={{
+                            width: '120px',
+                            borderRight: 'thin solid #DCDCDC',
+                            textAlign: 'left',
+                            padding: '6px',
+                          }}
+                        >
+                          {ele.debit}
                         </td>
                         <td
                           style={{
@@ -540,9 +570,20 @@ const Index = ({
                   </tbody>
                 </table>
                 <h5 className='' style={{ width: '410px', fontSize: '9px' }}>
-                  Total Expense:{' '}
+                  Total Credit:{' '}
                   {changedVal.reduce((accumulator, object) => {
-                    return accumulator + parseFloat(object.amounts);
+                    return (
+                      accumulator +
+                      parseFloat(object.type === 'Credit' ? object.amounts : 0)
+                    );
+                  }, 0)}
+                  <br />
+                  Total Debit:{' '}
+                  {changedVal.reduce((accumulator, object) => {
+                    return (
+                      accumulator +
+                      parseFloat(object.type === 'Debit' ? object.amounts : 0)
+                    );
                   }, 0)}
                 </h5>
               </div>

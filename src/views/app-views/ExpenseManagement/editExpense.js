@@ -50,6 +50,7 @@ const AddUser = ({
         category_id:
           singleData.category_id !== null ? singleData.category_id : '',
         amount: singleData.amount !== null ? singleData.amount : '',
+        type: singleData.type !== null ? singleData.type : '',
       });
       var mod = JSON.parse(singleData.mode);
       if (mod.mode === 'Cheque') {
@@ -59,7 +60,6 @@ const AddUser = ({
         ) {
         }
       }
-      console.log(mod);
       setmode(mod);
     }
   }, [singleData, form, visible]);
@@ -150,6 +150,24 @@ const AddUser = ({
             >
               Add Category
             </Link>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='type'
+              label={<span>Type</span>}
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select value',
+                },
+              ]}
+            >
+              <Select style={{ width: '100%' }} placeholder='Select type'>
+                <Select.Option value={''}></Select.Option>
+                <Select.Option value={'Debit'}> Debit</Select.Option>
+                <Select.Option value={'Credit'}> Credit</Select.Option>
+              </Select>
+            </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item

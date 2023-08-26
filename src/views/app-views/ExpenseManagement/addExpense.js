@@ -133,6 +133,24 @@ const AddUser = ({
           </Col>
           <Col span={12}>
             <Form.Item
+              name='type'
+              label={<span>Type</span>}
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select value',
+                },
+              ]}
+            >
+              <Select style={{ width: '100%' }} placeholder='Select Type'>
+                <Select.Option value={''}></Select.Option>
+                <Select.Option value={'Debit'}> Debit</Select.Option>
+                <Select.Option value={'Credit'}> Credit</Select.Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
               name='amount'
               style={{ width: '100%' }}
               label={<span>Amount</span>}

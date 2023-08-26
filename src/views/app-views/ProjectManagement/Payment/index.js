@@ -155,7 +155,7 @@ const Index = ({
         });
       });
       setamount(amount);
-      setsearchData(dataset);
+      setsearchData(dataset.sort((a, b) => Number(new Date(b.datezz)) - Number(new Date(a.datezz))));
     }
   }, [data, deletePayment]);
 
