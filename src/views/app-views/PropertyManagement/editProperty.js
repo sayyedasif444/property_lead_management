@@ -79,6 +79,7 @@ const AddProperty = ({
         source_name:
           singleData.source_name !== null ? singleData.source_name : '',
         near_by: singleData.near_by !== null ? singleData.near_by : '',
+        syndicate: singleData.syndicate !== null ? singleData.syndicate : '',
         expected_price:
           singleData.expected_price !== null ? singleData.expected_price : '',
         price_per_sqft:
@@ -404,6 +405,24 @@ const AddProperty = ({
                         <InputNumber
                           style={{ width: '100%' }}
                           placeholder='Expected Price'
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col lg={8}>
+                      <Form.Item
+                        className='mb-3'
+                        name='syndicate'
+                        label={<span>Syndicate Price </span>}
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Please provide value',
+                          },
+                        ]}
+                      >
+                        <InputNumber
+                          style={{ width: '100%' }}
+                          placeholder='Syndicate Price'
                         />
                       </Form.Item>
                     </Col>

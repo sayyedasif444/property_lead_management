@@ -168,11 +168,11 @@ const Index = ({
     }
   }, [data]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      listTaskUser();
-    }
-  }, [listTaskUser, isAuthenticated]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     listTaskUser();
+  //   }
+  // }, [listTaskUser, isAuthenticated]);
 
   const [searchData, setsearchData] = useState([]);
   const [search, setsearch] = useState('');
@@ -320,7 +320,7 @@ Index.propTypes = {
   isAuthenticated: PropTypes.any,
 };
 const mapStateToProps = (state) => ({
-  data: state.task.data,
+  data: state.task.dataUser,
   loading: state.task.loading,
   isError: state.task.isError,
   errMessage: state.task.errMessage,

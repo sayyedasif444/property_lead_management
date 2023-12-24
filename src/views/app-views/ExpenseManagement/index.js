@@ -35,6 +35,25 @@ import {
 import jsPDF from 'jspdf';
 const { RangePicker } = DatePicker;
 
+function uniqueObjectArray(array, key, keyList) {
+  let newSet = [];
+  array.forEach((item) => {
+    let flag = newSet.filter((ele) => ele[key] === item[key]).length > 0;
+    if (!flag) {
+      if (keyList.length === 0) {
+        newSet.push({ ...item });
+      } else {
+        let data = {};
+        keyList.forEach((ele) => {
+          data[ele] = item[ele];
+        });
+        newSet.push({ ...data });
+      }
+    }
+  });
+  return newSet;
+}
+
 const Index = ({
   data,
   loading,
@@ -51,6 +70,8 @@ const Index = ({
   const [modalVisibleedit, setModalVisibleedit] = useState(false);
   const [categoryModel, setcategoryModel] = useState(false);
   const [fromDate, setfromDate] = useState(null);
+  const [searchData, setsearchData] = useState([]);
+  const [categoryPrintData, setcategoryPrintData] = useState([]);
 
   const [columns, setcolumns] = useState([
     {
@@ -153,13 +174,19 @@ const Index = ({
           title: 'Category',
           dataIndex: 'category',
           key: 'category',
-          filters: category.map((ele) => {
+          filters: uniqueObjectArray(category, 'category', [
+            'category',
+            'createdAt',
+            'id',
+            'updatedAt',
+          ]).map((ele) => {
             return {
               text: ele.category,
               value: ele.category,
             };
           }),
-          onFilter: (value, record) => record.category === value,
+          onFilter: (value, record) =>
+            record.category.toLowerCase() === value.toLowerCase(),
         },
         {
           title: 'Actions',
@@ -171,13 +198,52 @@ const Index = ({
   }, [category, data]);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      listExpenseCategory();
-      listExpense();
+    if (category.length > 0 && searchData.length > 0) {
+      let categoryData = [];
+      category.forEach((ele) => {
+        categoryData.push({
+          id: ele.id,
+          category: ele.category,
+          debit: searchData
+            .filter(
+              (item) => item.type === 'Debit' && item.category_id === ele.id
+            )
+            .reduce((sum, item) => sum + parseFloat(item.price), 0)
+            .toFixed(2),
+          credit: searchData
+            .filter(
+              (item) => item.type === 'Credit' && item.category_id === ele.id
+            )
+            .reduce((sum, item) => sum + parseFloat(item.price), 0)
+            .toFixed(2),
+        });
+      });
+      setcategoryPrintData(categoryData);
     }
-  }, [listExpenseCategory, listExpense, isAuthenticated]);
+  }, [category, searchData]);
 
-  const [searchData, setsearchData] = useState([]);
+  const downloadCategory = () => {
+    const doc = new jsPDF({
+      format: 'a4',
+      fontSize: '10px',
+      unit: 'px',
+      externals: {
+        // only define the dependencies you are NOT using as externals!
+        canvg: 'canvg',
+        html2canvas: 'html2canvas',
+        dompurify: 'dompurify',
+        pagebreak: { mode: 'avoid-all', after: '.avoidThisRow' },
+      },
+    });
+    // Adding the fonts.
+    doc.setFont('Inter-Regular', 'normal', 9);
+    doc.html(categoryPdfref.current, {
+      async callback(doc) {
+        await doc.save('expense_report');
+      },
+    });
+  };
+
   const [search, setsearch] = useState('');
   const [changedVal, setchangedVal] = useState([]);
 
@@ -222,6 +288,7 @@ const Index = ({
               ? element.expenseCategory.category
               : '',
           transaction: mode !== null ? mode.mode : '',
+          category_id: element.category_id,
           datezz: element.date_of_expense,
           amount: 'Rs: ' + element.amount,
           credit: element.type === 'Credit' ? 'Rs: ' + element.amount : '-',
@@ -304,15 +371,17 @@ const Index = ({
       if (fromDate !== null) {
         dataset = dataset.filter(
           (ele) =>
-            moment(ele.datezz) >= fromDate[0] &&
-            moment(ele.datezz) <= fromDate[1]
+            moment(ele.datezz).format('DD-MM-YYYY') >= moment(fromDate[0]).format('DD-MM-YYYY') &&
+            moment(ele.datezz).format('DD-MM-YYYY') <= moment(fromDate[1]).format('DD-MM-YYYY')
         );
       }
       setchangedVal(dataset);
       setsearchData(dataset);
     }
   }, [data, search, deleteExpense, fromDate]);
+
   const pdfRef = useRef(null);
+  const categoryPdfref = useRef(null);
   const styles = {
     page: {
       marginTop: '10px',
@@ -403,6 +472,13 @@ const Index = ({
               onClick={(e) => handleDownload(true)}
             ></Button>
             <Button
+              type='primary mr-2 '
+              icon={<DownloadOutlined />}
+              onClick={(e) => downloadCategory()}
+            >
+              Category Expense
+            </Button>
+            <Button
               type='primary '
               icon={<PlusCircleOutlined />}
               onClick={(e) => setModalVisible(true)}
@@ -427,7 +503,7 @@ const Index = ({
                   accumulator +
                   parseFloat(object.type === 'Credit' ? object.amounts : 0)
                 );
-              }, 0)}
+              }, 0).toFixed(2)}
               <br />
               Total Debit:{' '}
               {changedVal.reduce((accumulator, object) => {
@@ -435,14 +511,23 @@ const Index = ({
                   accumulator +
                   parseFloat(object.type === 'Debit' ? object.amounts : 0)
                 );
-              }, 0)}
+              }, 0).toFixed(2)}
             </h5>
           </Col>
         </Row>
       </Card>
       <div style={{ display: 'none' }}>
         <div ref={pdfRef} style={styles.page}>
-          <h4 style={styles.fullWidth}>Expense: </h4>
+          <h6 style={styles.fullWidth}>
+            Expense{' '}
+            {fromDate !== null
+              ? '- (' +
+                moment(fromDate[0]).format('DD-MM-YYYY') +
+                ' to ' +
+                moment(fromDate[0]).format('DD-MM-YYYY') +
+                ')'
+              : ''}{' '}
+          </h6>
           {changedVal.length > 0 && (
             <div>
               <div style={styles.fullWidth}>
@@ -584,6 +669,147 @@ const Index = ({
                       accumulator +
                       parseFloat(object.type === 'Debit' ? object.amounts : 0)
                     );
+                  }, 0)}
+                </h5>
+              </div>
+            </div>
+          )}
+          <div className='avoidThisRow'></div>
+        </div>
+      </div>
+      <div style={{ display: 'none' }}>
+        <div ref={categoryPdfref} style={styles.page}>
+          <h6 style={styles.fullWidth}>
+            Expense Report{' '}
+            {fromDate !== null
+              ? '- (' +
+                moment(fromDate[0]).format('DD-MM-YYYY') +
+                ' to ' +
+                moment(fromDate[0]).format('DD-MM-YYYY') +
+                ')'
+              : ''}{' '}
+          </h6>
+          {categoryPrintData.length > 0 && (
+            <div>
+              <div style={styles.fullWidth}>
+                <table style={styles.fullWidth}>
+                  <tbody>
+                    <tr
+                      style={{
+                        border: 'thin solid #DCDCDC',
+                        borderBottom: 'thin solid #DCDCDC',
+                        width: '120px',
+                      }}
+                    >
+                      <th
+                        style={{
+                          width: '50px',
+                          borderRight: 'thin solid #DCDCDC',
+                          textAlign: 'left',
+                          padding: '6px',
+                        }}
+                      >
+                        Sr No
+                      </th>
+                      <th
+                        style={{
+                          width: '120px',
+                          borderRight: 'thin solid #DCDCDC',
+                          textAlign: 'left',
+                          padding: '6px',
+                        }}
+                      >
+                        Category
+                      </th>
+                      <th
+                        style={{
+                          width: '120px',
+                          borderRight: 'thin solid #DCDCDC',
+                          textAlign: 'left',
+                          padding: '6px',
+                        }}
+                      >
+                        Credit
+                      </th>
+                      <th
+                        style={{
+                          width: '120px',
+                          borderRight: 'thin solid #DCDCDC',
+                          textAlign: 'left',
+                          padding: '6px',
+                        }}
+                      >
+                        Debit
+                      </th>
+                    </tr>
+                    {categoryPrintData
+                      .filter(
+                        (ele) =>
+                          parseInt(ele.debit) !== 0 ||
+                          parseInt(ele.credit) !== 0
+                      )
+                      .map((ele, indz) => (
+                        <tr
+                          style={{
+                            border: 'thin solid #DCDCDC',
+                            borderBottom: 'thin solid #DCDCDC',
+                            width: '120px',
+                          }}
+                          key={indz}
+                        >
+                          <td
+                            style={{
+                              width: '120px',
+                              borderRight: 'thin solid #DCDCDC',
+                              textAlign: 'left',
+                              padding: '6px',
+                            }}
+                          >
+                            {indz + 1}
+                          </td>
+                          <td
+                            style={{
+                              width: '120px',
+                              borderRight: 'thin solid #DCDCDC',
+                              textAlign: 'left',
+                              padding: '6px',
+                            }}
+                          >
+                            {ele.category}
+                          </td>
+                          <td
+                            style={{
+                              width: '120px',
+                              borderRight: 'thin solid #DCDCDC',
+                              textAlign: 'left',
+                              padding: '6px',
+                            }}
+                          >
+                            {ele.credit}
+                          </td>
+                          <td
+                            style={{
+                              width: '120px',
+                              borderRight: 'thin solid #DCDCDC',
+                              textAlign: 'left',
+                              padding: '6px',
+                            }}
+                          >
+                            {ele.debit}
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+                <h5 className='' style={{ width: '410px', fontSize: '9px' }}>
+                  Total Credit:{' '}
+                  {categoryPrintData.reduce((accumulator, object) => {
+                    return accumulator + parseFloat(object.credit);
+                  }, 0)}
+                  <br />
+                  Total Debit:{' '}
+                  {categoryPrintData.reduce((accumulator, object) => {
+                    return accumulator + parseFloat(object.debit);
                   }, 0)}
                 </h5>
               </div>

@@ -4,8 +4,70 @@ import Loading from '../../components/shared-components/Loading';
 import { APP_PREFIX_PATH } from '../../configs/AppConfig';
 import { connect } from 'react-redux';
 import './style.css';
+import { useEffect } from 'react';
+import { listProperty } from '../../apis/dashboard/Property';
+import { listLead, listSource } from '../../apis/dashboard/Lead';
+import { listUser } from '../../apis/dashboard/User';
+import { listTaskUser, listTask } from '../../apis/dashboard/Task';
+import { listMeeting } from '../../apis/dashboard/Meeting';
+import PropTypes from 'prop-types';
+import { listProjects } from '../../apis/dashboard/Project';
+import { listCustomers } from '../../apis/dashboard/Customer';
+import { listExpense, listExpenseCategory } from '../../apis/dashboard/expense';
+import { listTransaction } from '../../apis/dashboard/transaction';
+import { listSalary } from '../../apis/dashboard/Salary';
 
-export const AppViews = () => {
+export const AppViews = ({
+  listProperty,
+  listLead,
+  listSource,
+  listUser,
+  listTaskUser,
+  listTask,
+  listMeeting,
+  listProjects,
+  listCustomers,
+  listExpenseCategory,
+  listExpense,
+  listTransaction,
+  isAuthenticated,
+  listSalary,
+}) => {
+  useEffect(() => {
+    return () => {
+      if (isAuthenticated) {
+        listProperty();
+        listTask();
+        listUser();
+        listTaskUser();
+        listLead();
+        listSalary();
+        listSource();
+        listMeeting();
+        listProjects();
+        listCustomers();
+        listExpenseCategory();
+        listExpense();
+        listTransaction();
+      }
+    };
+  }, [
+    listProperty,
+    listLead,
+    listSource,
+    listUser,
+    listTaskUser,
+    listTask,
+    listMeeting,
+    listProjects,
+    listCustomers,
+    listExpenseCategory,
+    listExpense,
+    listTransaction,
+    isAuthenticated,
+    listSalary,
+  ]);
+
   return (
     <Suspense fallback={<Loading cover='content' />}>
       <Switch>
@@ -28,6 +90,10 @@ export const AppViews = () => {
         <Route
           path={`${APP_PREFIX_PATH}/user-management`}
           component={lazy(() => import(`./UserManagement`))}
+        />
+        <Route
+          path={`${APP_PREFIX_PATH}/salary-management`}
+          component={lazy(() => import(`./SalaryManagement`))}
         />
         <Route
           path={`${APP_PREFIX_PATH}/user-profile`}
@@ -77,6 +143,31 @@ export const AppViews = () => {
     </Suspense>
   );
 };
-AppViews.propTypes = {};
-const mapStateToProps = (state) => ({});
-export default connect(mapStateToProps, {})(AppViews);
+AppViews.propTypes = {
+  listProperty: PropTypes.func,
+  listLead: PropTypes.func,
+  listSource: PropTypes.func,
+  listUser: PropTypes.func,
+  listTaskUser: PropTypes.func,
+  listTask: PropTypes.func,
+  isAuthenticated: PropTypes.any,
+  listMeeting: PropTypes.func,
+};
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+export default connect(mapStateToProps, {
+  listProperty,
+  listLead,
+  listSource,
+  listUser,
+  listTaskUser,
+  listTask,
+  listMeeting,
+  listProjects,
+  listCustomers,
+  listExpenseCategory,
+  listExpense,
+  listTransaction,
+  listSalary,
+})(AppViews);

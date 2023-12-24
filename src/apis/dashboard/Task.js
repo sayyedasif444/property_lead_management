@@ -2,7 +2,9 @@ import axios from 'axios';
 import {
   BACKEND_URL,
   LIST_TASK_DATA,
+  LIST_TASK_DATA_USERS,
   LOADING_LIST_TASK,
+  LOADING_LIST_USER_TASK,
   SET_ALERT_TASK,
 } from '../../actions/types';
 
@@ -47,16 +49,16 @@ export const listTaskUser = () => async (dispatch) => {
   })
     .then((response) => {
       if (response.data.statuscode === 200) {
-        dispatch({ type: LOADING_LIST_TASK, payload: false });
-        dispatch({ type: LIST_TASK_DATA, payload: response.data.data });
+        dispatch({ type: LOADING_LIST_USER_TASK, payload: false });
+        dispatch({ type: LIST_TASK_DATA_USERS, payload: response.data.data });
       } else {
-        dispatch({ type: LOADING_LIST_TASK, payload: false });
-        dispatch({ type: LIST_TASK_DATA, payload: [] });
+        dispatch({ type: LOADING_LIST_USER_TASK, payload: false });
+        dispatch({ type: LIST_TASK_DATA_USERS, payload: [] });
       }
     })
     .catch((error) => {
-      dispatch({ type: LOADING_LIST_TASK, payload: false });
-      dispatch({ type: LIST_TASK_DATA, payload: [] });
+      dispatch({ type: LOADING_LIST_USER_TASK, payload: false });
+      dispatch({ type: LIST_TASK_DATA_USERS, payload: [] });
     });
 };
 

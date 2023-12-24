@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Row, Col, Modal, Form, Input, Button } from 'antd';
+import { Row, Col, Modal, Form, Input, Button, message } from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addExpenseCategory } from '../../../apis/dashboard/expense';
@@ -11,10 +11,18 @@ const AddUser = ({
   isError,
   isErrorType,
   addExpenseCategory,
+  category,
 }) => {
   const [form] = Form.useForm();
 
   const onSubmit = (values) => {
+    if (
+      category.filter(
+        (ele) => ele.category.toLowerCase() === values.category.toLowerCase()
+      ).length > 0
+    ) {
+      message.error('Invalid Name');
+    }
     addExpenseCategory(values);
   };
 
@@ -54,6 +62,23 @@ const AddUser = ({
                   required: true,
                   message: `Please input category`,
                 },
+                ({ getFieldValue }) => ({
+                  validator(rule, value) {
+                    if (value) {
+                      if (
+                        category.filter(
+                          (ele) =>
+                            ele.category.toLowerCase() === value.toLowerCase()
+                        ).length > 0
+                      ) {
+                        return Promise.reject('Category already exists');
+                      }
+                      return Promise.resolve();
+                    } else {
+                      return Promise.resolve();
+                    }
+                  },
+                }),
               ]}
             >
               <Input type='category' placeholder='category' />
@@ -75,10 +100,12 @@ AddUser.propTypes = {
   isError: PropTypes.bool,
   errMessage: PropTypes.string,
   isErrorType: PropTypes.string,
+  category: PropTypes.any,
 };
 const mapStateToProps = (state) => ({
   isError: state.expense.isError,
   errMessage: state.expense.errMessage,
   isErrorType: state.expense.isErrorType,
+  category: state.expense.category,
 });
 export default connect(mapStateToProps, { addExpenseCategory })(AddUser);

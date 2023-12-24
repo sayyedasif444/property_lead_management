@@ -84,11 +84,11 @@ const Index = ({
     },
   ];
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      listProjects();
-    }
-  }, [listProjects, isAuthenticated]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     listProjects();
+  //   }
+  // }, [listProjects, isAuthenticated]);
 
   const [searchData, setsearchData] = useState([]);
   const [search, setsearch] = useState('');

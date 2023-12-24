@@ -17,11 +17,11 @@ const Index = ({
   listUser,
   deleteUser,
 }) => {
-  useEffect(() => {
-    if (isAuthenticated) {
-      listUser();
-    }
-  }, [listUser, isAuthenticated]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     listUser();
+  //   }
+  // }, [listUser, isAuthenticated]);
 
   useEffect(() => {
     if (isError && isErrorType === 'SUCCESS') {

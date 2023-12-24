@@ -175,12 +175,12 @@ const Index = ({
     }
   }, [data]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      listTask();
-      listUser();
-    }
-  }, [listTask, isAuthenticated, listUser]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     listTask();
+  //     listUser();
+  //   }
+  // }, [listTask, isAuthenticated, listUser]);
 
   const [searchData, setsearchData] = useState([]);
   const [search, setsearch] = useState('');
@@ -312,7 +312,9 @@ const Index = ({
               columns={columns}
               dataSource={searchData}
               loading={loading}
-              rowClassName={(record, index) => (record.isOpen ? '' : 'text-success')}
+              rowClassName={(record, index) =>
+                record.isOpen ? '' : 'text-success'
+              }
             />
           </Col>
         </Row>

@@ -75,6 +75,12 @@ const Index = ({
       width: '140px',
     },
     {
+      title: 'Expected Amount',
+      dataIndex: 'expected_amount',
+      key: 'expected_amount',
+      width: '140px',
+    },
+    {
       title: 'Expected Date',
       dataIndex: 'date',
       key: 'date',
@@ -98,11 +104,11 @@ const Index = ({
     },
   ];
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      listTransaction();
-    }
-  }, [listTransaction, isAuthenticated]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     listTransaction();
+  //   }
+  // }, [listTransaction, isAuthenticated]);
 
   const [searchData, setsearchData] = useState([]);
   const [search, setsearch] = useState('');
@@ -148,6 +154,7 @@ const Index = ({
           name: element.name,
           particular: element.particular,
           datezz: element.date,
+          expected_amount: element.expected_amount,
           date: moment(element.date).format('DD-MM-YYYY'),
           debit: element.debit,
           credit: element.credit,
@@ -272,7 +279,7 @@ const Index = ({
               columns={columns}
               dataSource={searchData}
               loading={loading}
-              scroll={{ x: 1200 }}
+              scroll={{ x: 1350 }}
             />
             <h5 style={{ marginTop: '-40px' }} className='pl-3'>
               Credited: {credit} {' / '}

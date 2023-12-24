@@ -36,6 +36,8 @@ const AddUser = ({
         credit: dataset.credit !== null ? dataset.credit : '',
         debit: dataset.debit !== null ? dataset.debit : '',
         last_payment: dataset.last_payment !== null ? dataset.last_payment : '',
+        expected_amount:
+          dataset.expected_amount !== null ? dataset.expected_amount : '',
       });
     }
   }, [dataset, form, visible]);
@@ -104,6 +106,15 @@ const AddUser = ({
               ]}
             >
               <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='expected_amount'
+              style={{ width: '100%' }}
+              label={<span>Expected Amount</span>}
+            >
+              <Input placeholder='Expected Amount' />
             </Form.Item>
           </Col>
           <Col span={12}>

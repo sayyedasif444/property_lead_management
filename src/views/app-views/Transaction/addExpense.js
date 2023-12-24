@@ -85,6 +85,15 @@ const AddUser = ({
           </Col>
           <Col span={12}>
             <Form.Item
+              name='expected_amount'
+              style={{ width: '100%' }}
+              label={<span>Expected Amount</span>}
+            >
+              <Input placeholder='Expected Amount' />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
               name='credit'
               style={{ width: '100%' }}
               label={<span>Credit</span>}

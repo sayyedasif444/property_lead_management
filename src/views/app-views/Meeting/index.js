@@ -37,12 +37,12 @@ const Index = ({
   const [modalVisibleedit, setModalVisibleedit] = useState(false);
   const [modalVisibleeditPass, setModalVisibleeditPass] = useState(false);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      listMeeting();
-      listUser();
-    }
-  }, [listMeeting, isAuthenticated, listUser]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     listMeeting();
+  //     listUser();
+  //   }
+  // }, [listMeeting, isAuthenticated, listUser]);
 
   const [searchData, setsearchData] = useState([]);
   const [search, setsearch] = useState('');

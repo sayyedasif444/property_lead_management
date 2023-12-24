@@ -373,13 +373,13 @@ const Index = ({
     ]);
   }, [user, source, data]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      listLead();
-      listSource();
-      listUser();
-    }
-  }, [listLead, isAuthenticated, listSource, listUser]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     listLead();
+  //     listSource();
+  //     listUser();
+  //   }
+  // }, [listLead, isAuthenticated, listSource, listUser]);
 
   const [searchData, setsearchData] = useState([]);
   const [search, setsearch] = useState('');
@@ -648,12 +648,16 @@ const Index = ({
       if (fromDate !== null) {
         dataset = dataset.filter(
           (ele) =>
-            moment(ele.created_at) >= fromDate[0] &&
-            moment(ele.created_at) <= fromDate[1]
+            moment(ele.created_at).format('DD-MM-YYYY') >=
+              moment(fromDate[0]).format('DD-MM-YYYY') &&
+            moment(ele.created_at).format('DD-MM-YYYY') <=
+              moment(fromDate[1]).format('DD-MM-YYYY')
         );
       }
       if (arrivalChange !== null) {
-        dataset = dataset.filter((ele) => ele.arrivalDate === arrivalChange.format('YYYY-MM-DD'));
+        dataset = dataset.filter(
+          (ele) => ele.arrivalDate === arrivalChange.format('YYYY-MM-DD')
+        );
       }
       setsearchData(dataset);
     }

@@ -18,6 +18,7 @@ import {
   ContainerOutlined,
   UsergroupAddOutlined,
   ProfileOutlined,
+  FileExcelOutlined,
 } from '@ant-design/icons';
 import { APP_PREFIX_PATH } from '../../configs/AppConfig';
 
@@ -69,6 +70,14 @@ const superUserNavTree = [
         path: `${APP_PREFIX_PATH}/user-management`,
         title: 'sidenav.user-management',
         icon: UserSwitchOutlined,
+        breadcrumb: true,
+        submenu: [],
+      },
+      {
+        key: 'salary-management',
+        path: `${APP_PREFIX_PATH}/salary-management`,
+        title: 'sidenav.salary-management',
+        icon: FileExcelOutlined,
         breadcrumb: true,
         submenu: [],
       },

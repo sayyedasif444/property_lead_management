@@ -1,16 +1,20 @@
 import {
   LIST_TASK_DATA,
+  LIST_TASK_DATA_USERS,
   LOADING_LIST_TASK,
+  LOADING_LIST_USER_TASK,
   SET_ALERT_TASK,
   SET_SIGNLE_TASK,
 } from '../../actions/types';
 
 const initialState = {
   loading: true,
+  loadingUser: true,
   isError: false,
   isErrorType: null,
   errMessage: null,
   data: [],
+  dataUser: [],
   singleData: {},
 };
 
@@ -31,6 +35,16 @@ function userReducer(state = initialState, action) {
       return {
         ...state,
         data: payload,
+      };
+    case LOADING_LIST_USER_TASK:
+      return {
+        ...state,
+        loadingUser: payload,
+      };
+    case LIST_TASK_DATA_USERS:
+      return {
+        ...state,
+        dataUser: payload,
       };
     case SET_ALERT_TASK:
       return {

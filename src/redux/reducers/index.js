@@ -10,6 +10,7 @@ import expense from './Expense';
 import project from './Project';
 import customer from './Customer';
 import transaction from './Transaction';
+import salary from './Salary';
 
 export default combineReducers({
   auth,
@@ -23,4 +24,5 @@ export default combineReducers({
   project,
   customer,
   transaction,
+  salary,
 });

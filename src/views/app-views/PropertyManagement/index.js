@@ -113,11 +113,11 @@ const Index = ({
     setmainData(result);
   }, [dataSet, search, slider]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      listProperty();
-    }
-  }, [listProperty, isAuthenticated]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     listProperty();
+  //   }
+  // }, [listProperty, isAuthenticated]);
 
   useEffect(() => {
     if (isError && isErrorType === 'SUCCESS') {

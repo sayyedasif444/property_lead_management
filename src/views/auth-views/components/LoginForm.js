@@ -10,6 +10,19 @@ import { motion } from 'framer-motion';
 import store from '../../../redux/store';
 import { SET_LOADING_FALSE } from '../../../actions/types';
 import setAuthToken from '../../../utils/setAuthToken';
+import { listProperty } from '../../../apis/dashboard/Property';
+import { listTask, listTaskUser } from '../../../apis/dashboard/Task';
+import { listUser } from '../../../apis/dashboard/User';
+import { listLead, listSource } from '../../../apis/dashboard/Lead';
+import { listMeeting } from '../../../apis/dashboard/Meeting';
+import { listProjects } from '../../../apis/dashboard/Project';
+import { listCustomers } from '../../../apis/dashboard/Customer';
+import {
+  listExpense,
+  listExpenseCategory,
+} from '../../../apis/dashboard/expense';
+import { listTransaction } from '../../../apis/dashboard/transaction';
+import { listSalary } from '../../../apis/dashboard/Salary';
 
 export const LoginForm = ({
   login,
@@ -19,6 +32,19 @@ export const LoginForm = ({
   isErrorType,
   isOtp,
   isMainLoading,
+  listProperty,
+  listTask,
+  listUser,
+  listTaskUser,
+  listLead,
+  listSource,
+  listMeeting,
+  listProjects,
+  listCustomers,
+  listExpenseCategory,
+  listExpense,
+  listTransaction,
+  listSalary,
 }) => {
   const onLogin = async (values) => {
     setloadingButton(true);
@@ -36,6 +62,19 @@ export const LoginForm = ({
 
   if (isAuthenticated) {
     setAuthToken(sessionStorage.token);
+    listProperty();
+    listTask();
+    listUser();
+    listTaskUser();
+    listLead();
+    listSalary();
+    listSource();
+    listMeeting();
+    listProjects();
+    listCustomers();
+    listExpenseCategory();
+    listExpense();
+    listTransaction();
     return <Redirect to='/app' />;
   } else {
     store.dispatch({ type: SET_LOADING_FALSE });
@@ -163,4 +202,19 @@ const mapStateToProps = (state) => ({
   isMainLoading: state.auth.loading,
   isOtp: state.auth.isOtp,
 });
-export default connect(mapStateToProps, { login })(LoginForm);
+export default connect(mapStateToProps, {
+  login,
+  listProperty,
+  listTask,
+  listUser,
+  listTaskUser,
+  listLead,
+  listSource,
+  listMeeting,
+  listProjects,
+  listCustomers,
+  listExpenseCategory,
+  listExpense,
+  listTransaction,
+  listSalary,
+})(LoginForm);

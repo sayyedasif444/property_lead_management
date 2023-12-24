@@ -354,6 +354,24 @@ const AddProperty = ({ addProperty, errMessage, isError, isErrorType }) => {
                     <Col lg={8}>
                       <Form.Item
                         className='mb-3'
+                        name='syndicate'
+                        label={<span>Syndicate Price </span>}
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Please provide value',
+                          },
+                        ]}
+                      >
+                        <InputNumber
+                          style={{ width: '100%' }}
+                          placeholder='Syndicate Price'
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col lg={8}>
+                      <Form.Item
+                        className='mb-3'
                         name='price_per_sqft'
                         label={<span>Price Per sqft </span>}
                       >

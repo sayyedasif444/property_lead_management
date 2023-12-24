@@ -79,11 +79,11 @@ const Index = ({
     },
   ];
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      listUser();
-    }
-  }, [listUser, isAuthenticated]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     listUser();
+  //   }
+  // }, [listUser, isAuthenticated]);
 
   const [searchData, setsearchData] = useState([]);
   const [search, setsearch] = useState('');

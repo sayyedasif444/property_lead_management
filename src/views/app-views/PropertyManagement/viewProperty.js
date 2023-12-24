@@ -97,6 +97,10 @@ const ViewProperty = ({ singleData, downloadData }) => {
           data: singleData.expected_price,
         },
         {
+          title: <strong className='text-capitalize'>Syndicate price</strong>,
+          data: singleData.syndicate,
+        },
+        {
           title: <strong className='text-capitalize'>price per sqft</strong>,
           data: singleData.price_per_sqft,
         },
