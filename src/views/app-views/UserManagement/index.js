@@ -15,6 +15,7 @@ import {
   PlusCircleOutlined,
   EditOutlined,
   KeyOutlined,
+  EyeOutlined,
 } from '@ant-design/icons';
 import AddUser from './addUser';
 import EditUser from './editUser';
@@ -26,6 +27,7 @@ import { deleteUser, listUser } from '../../../apis/dashboard/User';
 import { Link } from 'react-router-dom';
 import store from '../../../redux/store';
 import { SET_SIGNLE_USER } from '../../../actions/types';
+import SalaryModal from './SalaryModal';
 
 const Index = ({
   data,
@@ -87,6 +89,8 @@ const Index = ({
 
   const [searchData, setsearchData] = useState([]);
   const [search, setsearch] = useState('');
+  const [salaryModal, setsalaryModal] = useState(false);
+  const [userId, setuserId] = useState(null);
 
   useEffect(() => {
     if (isError && isErrorType === 'SUCCESS') {
@@ -174,6 +178,21 @@ const Index = ({
                   />
                 </Link>
               </Tooltip>
+              <Tooltip title='Salary History'>
+                <Link
+                  to='#!'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setuserId(element.id);
+                    setsalaryModal(true);
+                  }}
+                >
+                  <EyeOutlined
+                    className='text-primary ml-4 '
+                    style={{ fontSize: '16px' }}
+                  />
+                </Link>
+              </Tooltip>
             </div>
           ),
         });
@@ -217,6 +236,11 @@ const Index = ({
       <EditUserPass
         visible={modalVisibleeditPass}
         cancel={setModalVisibleeditPass}
+      />
+      <SalaryModal
+        visible={salaryModal}
+        cancel={setsalaryModal}
+        userId={userId}
       />
     </div>
   );

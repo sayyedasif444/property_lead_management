@@ -106,7 +106,24 @@ const AddUser = ({
                 },
               ]}
             >
-              <Select style={{ width: '100%' }} placeholder='Select Category'>
+              <Select
+                style={{ width: '100%' }}
+                placeholder='Select Category'
+                showSearch
+                filterOption={(input, option) => {
+                  if (
+                    option !== null &&
+                    input !== null &&
+                    option.key !== null
+                  ) {
+                    const { key, children } = option;
+                    return (
+                      key.toLowerCase().includes(input.toLowerCase()) ||
+                      children.toLowerCase().includes(input.toLowerCase())
+                    );
+                  }
+                }}
+              >
                 <Select.Option value={''}></Select.Option>
                 {category.map((ele) => (
                   <Select.Option value={ele.id} key={ele.id}>

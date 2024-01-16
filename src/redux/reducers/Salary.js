@@ -11,6 +11,7 @@ const initialState = {
   errMessage: null,
   salary: [],
   advance: [],
+  deduction: [],
   addons: [],
 };
 
@@ -27,6 +28,7 @@ function userReducer(state = initialState, action) {
         ...state,
         salary: payload.salary,
         advance: payload.advance,
+        deduction: payload.deduction,
         addons: payload.addons,
       };
     case SET_ALERT_SALARY:

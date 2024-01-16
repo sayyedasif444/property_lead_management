@@ -4,6 +4,7 @@ import {
   Col,
   DatePicker,
   message,
+  Popconfirm,
   Row,
   Table,
   Tooltip,
@@ -13,6 +14,8 @@ import {
   PlusCircleOutlined,
   EditOutlined,
   DownloadOutlined,
+  DeleteOutlined,
+  FileSyncOutlined,
 } from '@ant-design/icons';
 import AddUser from './addUser';
 import EditUser from './editUser';
@@ -23,6 +26,37 @@ import { deleteUser, listUser } from '../../../apis/dashboard/User';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import jsPDF from 'jspdf';
+import ViewAdvance from './ViewAdvance';
+import ViewDeduction from './ViewDeduction';
+import axios from 'axios';
+import { BACKEND_URL } from '../../../actions/types';
+import { listSalary } from '../../../apis/dashboard/Salary';
+import store from '../../../redux/store';
+import PaySalary from './PaySalary';
+
+const removeSalary = async (id) => {
+  const config = {
+    'Content-Type': 'application/json',
+  };
+  const body = { id: id, isValid: false };
+  await axios({
+    method: 'POST',
+    url: BACKEND_URL + 'salary/delete-salary-user',
+    data: body,
+    headers: config,
+  })
+    .then((response) => {
+      if (response.data.statuscode === 200) {
+        message.success(response.data.message);
+        store.dispatch(listSalary());
+      } else {
+        message.error(response.data.message);
+      }
+    })
+    .catch((error) => {
+      message.error('Server Error');
+    });
+};
 
 const Index = ({
   salary,
@@ -34,9 +68,15 @@ const Index = ({
   isErrorType,
   isAuthenticated,
   data,
+  deduction,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleedit, setModalVisibleedit] = useState(false);
+  const [paymentModel, setpaymentModel] = useState(false);
+  const [advanceModal, setadvanceModal] = useState(false);
+  const [deductionModal, setdeductionModal] = useState(false);
+  const [paymentData, setpaymentData] = useState({});
+
   const [currentDate, setcurrentDate] = useState(
     moment(new Date()).format('YYYY-MM') + '-01'
   );
@@ -74,13 +114,28 @@ const Index = ({
     },
     {
       title: 'Advance',
-      dataIndex: 'advance',
-      key: 'advance',
+      dataIndex: 'advances',
+      key: 'advances',
+    },
+    {
+      title: 'Deduction',
+      dataIndex: 'deductions',
+      key: 'deductions',
     },
     {
       title: 'Payable',
       dataIndex: 'payable',
       key: 'payable',
+    },
+    {
+      title: 'Paid',
+      dataIndex: 'paid',
+      key: 'paid',
+    },
+    {
+      title: 'Paid Date',
+      dataIndex: 'paid_date',
+      key: 'paid_date',
     },
     {
       title: 'Actions',
@@ -137,70 +192,326 @@ const Index = ({
             ele.type === 'Advance'
         );
 
-        data.push({
-          ...element,
-          key: index + 1,
-          srno: index + 1,
-          salaries: maxDateObject,
-          salary: maxDateObject.hasOwnProperty('salary')
-            ? maxDateObject.salary
-            : 0,
-          incentive:
-            incent.length > 0
-              ? incent.reduce((sum, item) => sum + parseFloat(item.amount), 0)
+        let nextDdate = moment(currentDate);
+
+        var Fadv = advance.filter(
+          (ele) =>
+            ele.user_id === element.id &&
+            ele.effective_date ===
+              nextDdate.add(1, 'months').format('YYYY-MM-DD') &&
+            ele.type === 'Advance'
+        );
+
+        //Other Deduction
+        var deduct = deduction.filter(
+          (ele) =>
+            ele.user_id === element.id &&
+            ele.effective_date === currentDate &&
+            ele.type === 'Deduction'
+        );
+        if (maxDateObject.isValid) {
+          data.push({
+            ...element,
+            key: index + 1,
+            srno: index + 1,
+            salaries: maxDateObject,
+            salary: maxDateObject.hasOwnProperty('salary')
+              ? maxDateObject.salary
               : 0,
-          commission:
-            comm.length > 0
-              ? comm.reduce((sum, item) => sum + parseFloat(item.amount), 0)
-              : 0,
-          advance:
-            adv.length > 0
-              ? adv.reduce((sum, item) => sum + parseFloat(item.amount), 0)
-              : 0,
-          payable:
-            parseFloat(
-              maxDateObject.hasOwnProperty('salary') ? maxDateObject.salary : 0
-            ) +
-            parseFloat(
+            incent: incent,
+            comm: comm,
+            adv: adv,
+            paid: maxDateObject.hasOwnProperty('paidSalaries')
+              ? maxDateObject.paidSalaries.filter(
+                  (elt) => elt.paid_for_date === currentDate
+                ).length > 0
+                ? maxDateObject.paidSalaries.filter(
+                    (elt) => elt.paid_for_date === currentDate
+                  )[0].totalPaid
+                : '-'
+              : '-',
+            paid_date: maxDateObject.hasOwnProperty('paidSalaries')
+              ? maxDateObject.paidSalaries.filter(
+                  (elt) => elt.paid_for_date === currentDate
+                ).length > 0
+                ? maxDateObject.paidSalaries.filter(
+                    (elt) => elt.paid_for_date === currentDate
+                  )[0].paid_date
+                : '-'
+              : '-',
+            incentive:
               incent.length > 0
                 ? incent.reduce((sum, item) => sum + parseFloat(item.amount), 0)
-                : 0
-            ) +
-            parseFloat(
+                : 0,
+            commission:
               comm.length > 0
                 ? comm.reduce((sum, item) => sum + parseFloat(item.amount), 0)
-                : 0
-            ) -
-            parseFloat(
-              adv.length > 0
-                ? adv.reduce((sum, item) => sum + parseFloat(item.amount), 0)
-                : 0
-            ),
-          action: (
-            <>
-              <Tooltip title='Edit'>
-                <Link to='#!'>
-                  <EditOutlined
-                    className='text-success'
-                    style={{ fontSize: '16px' }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setcurrentData(element);
-                      setModalVisibleedit(true);
-                    }}
-                  />
+                : 0,
+            advances: (
+              <>
+                <Link
+                  to='#!'
+                  className='mr-2'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setcurrentData({
+                      ...element,
+                      advance: adv,
+                      commission: comm,
+                      incentive: incent,
+                      deduction: deduct,
+                      salary: maxDateObject.hasOwnProperty('salary')
+                        ? maxDateObject.salary
+                        : 0,
+                    });
+                    setadvanceModal(true);
+                  }}
+                >
+                  {adv.length > 0
+                    ? JSON.parse(adv[0].amount).reduce(
+                        (sum, item) => sum + parseFloat(item.amount),
+                        0
+                      )
+                    : 0}
                 </Link>
-              </Tooltip>
-            </>
-          ),
-        });
+              </>
+            ),
+            advance:
+              adv.length > 0
+                ? JSON.parse(adv[0].amount).reduce(
+                    (sum, item) => sum + parseFloat(item.amount),
+                    0
+                  )
+                : 0,
+            deductions: (
+              <>
+                <Link
+                  to='#!'
+                  className='mr-2'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setcurrentData({
+                      ...element,
+                      advance: adv,
+                      commission: comm,
+                      incentive: incent,
+                      deduction: deduct,
+                      salary: maxDateObject.hasOwnProperty('salary')
+                        ? maxDateObject.salary
+                        : 0,
+                    });
+                    setdeductionModal(true);
+                  }}
+                >
+                  {deduct.length > 0
+                    ? JSON.parse(deduct[0].amount).reduce(
+                        (sum, item) => sum + parseFloat(item.amount),
+                        0
+                      )
+                    : 0}
+                </Link>
+              </>
+            ),
+            deduction:
+              deduct.length > 0
+                ? JSON.parse(deduct[0].amount).reduce(
+                    (sum, item) => sum + parseFloat(item.amount),
+                    0
+                  )
+                : 0,
+            payable:
+              parseFloat(
+                maxDateObject.hasOwnProperty('salary')
+                  ? maxDateObject.salary
+                  : 0
+              ) +
+              parseFloat(
+                incent.length > 0
+                  ? incent.reduce(
+                      (sum, item) => sum + parseFloat(item.amount),
+                      0
+                    )
+                  : 0
+              ) +
+              parseFloat(
+                comm.length > 0
+                  ? comm.reduce((sum, item) => sum + parseFloat(item.amount), 0)
+                  : 0
+              ) -
+              parseFloat(
+                adv.length > 0
+                  ? JSON.parse(adv[0].amount).reduce(
+                      (sum, item) => sum + parseFloat(item.amount),
+                      0
+                    )
+                  : 0
+              ) -
+              parseFloat(
+                deduct.length > 0
+                  ? JSON.parse(deduct[0].amount).reduce(
+                      (sum, item) => sum + parseFloat(item.amount),
+                      0
+                    )
+                  : 0
+              ),
+            action: (
+              <>
+                <Tooltip title='Edit'>
+                  <Link to='#!'>
+                    <EditOutlined
+                      className='text-success'
+                      style={{ fontSize: '16px' }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setcurrentData({
+                          ...element,
+                          advance: adv,
+                          commission: comm,
+                          incentive: incent,
+                          deduction: deduct,
+                          salary: maxDateObject.hasOwnProperty('salary')
+                            ? maxDateObject.salary
+                            : 0,
+                        });
+                        setModalVisibleedit(true);
+                      }}
+                    />
+                  </Link>
+                </Tooltip>
+                <Popconfirm
+                  title='Are you sure?'
+                  onConfirm={(e) => removeSalary(maxDateObject.id)}
+                  okText='Yes'
+                  cancelText='No'
+                >
+                  <Link to='#!' className='ml-3'>
+                    <DeleteOutlined
+                      className='text-danger'
+                      style={{ fontSize: '16px' }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                      }}
+                    />
+                  </Link>
+                </Popconfirm>
+                {maxDateObject.hasOwnProperty('paidSalaries') ? (
+                  maxDateObject.paidSalaries.filter(
+                    (elt) => elt.paid_for_date === currentDate
+                  ).length === 0 ? (
+                    <Tooltip title='Pay Salary'>
+                      <Link to='#!' className='ml-3'>
+                        <FileSyncOutlined
+                          className='text-success'
+                          style={{ fontSize: '16px' }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setpaymentModel(true);
+                            setpaymentData({
+                              payable:
+                                parseFloat(
+                                  maxDateObject.hasOwnProperty('salary')
+                                    ? maxDateObject.salary
+                                    : 0
+                                ) +
+                                parseFloat(
+                                  incent.length > 0
+                                    ? incent.reduce(
+                                        (sum, item) =>
+                                          sum + parseFloat(item.amount),
+                                        0
+                                      )
+                                    : 0
+                                ) +
+                                parseFloat(
+                                  comm.length > 0
+                                    ? comm.reduce(
+                                        (sum, item) =>
+                                          sum + parseFloat(item.amount),
+                                        0
+                                      )
+                                    : 0
+                                ) -
+                                parseFloat(
+                                  adv.length > 0
+                                    ? JSON.parse(adv[0].amount).reduce(
+                                        (sum, item) =>
+                                          sum + parseFloat(item.amount),
+                                        0
+                                      )
+                                    : 0
+                                ) -
+                                parseFloat(
+                                  deduct.length > 0
+                                    ? JSON.parse(deduct[0].amount).reduce(
+                                        (sum, item) =>
+                                          sum + parseFloat(item.amount),
+                                        0
+                                      )
+                                    : 0
+                                ),
+                              incentive:
+                                incent.length > 0
+                                  ? incent.reduce(
+                                      (sum, item) =>
+                                        sum + parseFloat(item.amount),
+                                      0
+                                    )
+                                  : 0,
+                              commission:
+                                comm.length > 0
+                                  ? comm.reduce(
+                                      (sum, item) =>
+                                        sum + parseFloat(item.amount),
+                                      0
+                                    )
+                                  : 0,
+                              advance:
+                                adv.length > 0
+                                  ? JSON.parse(adv[0].amount).reduce(
+                                      (sum, item) =>
+                                        sum + parseFloat(item.amount),
+                                      0
+                                    )
+                                  : 0,
+
+                              deduction:
+                                deduct.length > 0
+                                  ? JSON.parse(deduct[0].amount).reduce(
+                                      (sum, item) =>
+                                        sum + parseFloat(item.amount),
+                                      0
+                                    )
+                                  : 0,
+                              Fadvance: Fadv,
+                              salary: maxDateObject.salary,
+                              id: maxDateObject.id,
+                              user_id: maxDateObject.user_id,
+                              data: maxDateObject.paidSalaries.filter(
+                                (elt) => elt.paid_for_date === currentDate
+                              )[0],
+                            });
+                          }}
+                        />
+                      </Link>
+                    </Tooltip>
+                  ) : (
+                    ''
+                  )
+                ) : (
+                  ''
+                )}
+              </>
+            ),
+          });
+        }
       });
       setsearchData(data);
     } else {
       setsearchData([]);
     }
-  }, [salary, addons, advance, currentDate]);
+  }, [salary, addons, advance, currentDate, deduction]);
 
   const [searchData, setsearchData] = useState([]);
 
@@ -324,6 +635,24 @@ const Index = ({
         currentData={currentData}
         setcurrentData={setcurrentData}
       />
+      <ViewAdvance
+        visible={advanceModal}
+        cancel={setadvanceModal}
+        currentData={currentData}
+        setcurrentData={setcurrentData}
+      />
+      <ViewDeduction
+        visible={deductionModal}
+        cancel={setdeductionModal}
+        currentData={currentData}
+        setcurrentData={setcurrentData}
+      />
+      <PaySalary
+        visible={paymentModel}
+        cancel={setpaymentModel}
+        paymentData={paymentData}
+        currentDate={currentDate}
+      />
       {/* print */}
       <div style={{ display: 'none' }}>
         <div ref={categoryPdfref} style={styles.page}>
@@ -412,6 +741,16 @@ const Index = ({
                         }}
                       >
                         Advance
+                      </th>
+                      <th
+                        style={{
+                          width: '120px',
+                          borderRight: 'thin solid #DCDCDC',
+                          textAlign: 'left',
+                          padding: '6px',
+                        }}
+                      >
+                        Deduction
                       </th>
                       <th
                         style={{
@@ -517,6 +856,16 @@ const Index = ({
                               padding: '6px',
                             }}
                           >
+                            {ele.deduction}
+                          </td>
+                          <td
+                            style={{
+                              width: '120px',
+                              borderRight: 'thin solid #DCDCDC',
+                              textAlign: 'left',
+                              padding: '6px',
+                            }}
+                          >
                             {ele.payable}
                           </td>
                         </tr>
@@ -544,6 +893,7 @@ Index.propTypes = {
   salary: PropTypes.any,
   data: PropTypes.any,
   advance: PropTypes.any,
+  deduction: PropTypes.any,
   addons: PropTypes.any,
   loading: PropTypes.any,
   isError: PropTypes.bool,
@@ -554,6 +904,7 @@ Index.propTypes = {
 const mapStateToProps = (state) => ({
   salary: state.salary.salary,
   advance: state.salary.advance,
+  deduction: state.salary.deduction,
   addons: state.salary.addons,
   loading: state.salary.loading,
   isError: state.salary.isError,

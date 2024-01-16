@@ -19,10 +19,30 @@ const AddUser = ({
   const [form] = Form.useForm();
 
   const onSubmit = (values) => {
+    if (values.type === 'Advance') {
+      if (currentData.advance.length > 0) {
+        values.amount = [
+          ...JSON.parse(currentData.advance[0].amount),
+          { data: currentDate, amount: values.amount },
+        ];
+      } else {
+        values.amount = [{ data: currentDate, amount: values.amount }];
+      }
+    }
+    if (values.type === 'Deduction') {
+      if (currentData.deduction.length > 0) {
+        values.amount = [
+          ...JSON.parse(currentData.deduction[0].amount),
+          { data: currentDate, amount: values.amount },
+        ];
+      } else {
+        values.amount = [{ data: currentDate, amount: values.amount }];
+      }
+    }
     if (currentDate !== '') {
       addSalaryAddon({
-        amount: values.amount,
-        effective_date: currentDate,
+        amount: JSON.stringify(values.amount),
+        effective_date: moment(currentDate).format('YYYY-MM') + '-01',
         type: values.type,
         user_id: currentData.id,
         count: 1,
@@ -40,7 +60,7 @@ const AddUser = ({
   }, [isError, isErrorType, errMessage, form, cancel]);
 
   const [currentDate, setcurrentDate] = useState(
-    moment(new Date()).format('YYYY-MM') + '-01'
+    moment(new Date()).format('YYYY-MM-DD')
   );
 
   return (
@@ -72,11 +92,22 @@ const AddUser = ({
                 },
               ]}
             >
-              <Select size={'default'} style={{ width: '100%' }}>
+              <Select
+                size={'default'}
+                style={{ width: '100%' }}
+                onChange={(e) => {
+                  if (e === 'Deduction') {
+                    form.setFieldsValue({
+                      amount: (currentData.salary / 30).toFixed(2),
+                    });
+                  }
+                }}
+              >
                 <Select.Option value={''}></Select.Option>
                 <Select.Option value={'Incentive'}>Incentive</Select.Option>
                 <Select.Option value={'Commission'}>Commission</Select.Option>
                 <Select.Option value={'Advance'}>Advance</Select.Option>
+                <Select.Option value={'Deduction'}>Deduction</Select.Option>
               </Select>
             </Form.Item>
           </Col>
@@ -112,10 +143,10 @@ const AddUser = ({
               label={<span>Effective Date</span>}
             >
               <DatePicker
-                picker='month'
+                picker='day'
                 style={{ width: '100%' }}
                 value={moment(currentDate)}
-                onChange={(e, date) => setcurrentDate(date + '-01')}
+                onChange={(e, date) => setcurrentDate(date)}
               />
             </Form.Item>
           </Col>

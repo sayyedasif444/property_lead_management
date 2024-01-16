@@ -27,6 +27,7 @@ export const listSalary = () => async (dispatch) => {
             salary: response.data.data,
             addons: response.data.addons,
             advance: response.data.advance,
+            deduction: response.data.deduction,
           },
         });
       } else {
@@ -37,6 +38,7 @@ export const listSalary = () => async (dispatch) => {
             salary: [],
             addons: [],
             advance: [],
+            deduction: [],
           },
         });
       }
@@ -48,6 +50,7 @@ export const listSalary = () => async (dispatch) => {
         payload: {
           salary: [],
           addons: [],
+          deduction: [],
           advance: [],
         },
       });

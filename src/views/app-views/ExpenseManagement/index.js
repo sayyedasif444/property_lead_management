@@ -33,6 +33,8 @@ import {
   listExpenseCategory,
 } from '../../../apis/dashboard/expense';
 import jsPDF from 'jspdf';
+import Category from './Category';
+import EditCategory from './editCategory';
 const { RangePicker } = DatePicker;
 
 function uniqueObjectArray(array, key, keyList) {
@@ -67,6 +69,9 @@ const Index = ({
   category,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [catmodalVisible, setcatModalVisible] = useState(false);
+  const [editcatmodalVisible, seteditcatModalVisible] = useState(false);
+  const [editCatData, seteditCatData] = useState({});
   const [modalVisibleedit, setModalVisibleedit] = useState(false);
   const [categoryModel, setcategoryModel] = useState(false);
   const [fromDate, setfromDate] = useState(null);
@@ -371,8 +376,14 @@ const Index = ({
       if (fromDate !== null) {
         dataset = dataset.filter(
           (ele) =>
-            moment(ele.datezz).format('DD-MM-YYYY') >= moment(fromDate[0]).format('DD-MM-YYYY') &&
-            moment(ele.datezz).format('DD-MM-YYYY') <= moment(fromDate[1]).format('DD-MM-YYYY')
+            moment(moment(ele.datezz).format('YYYY-MM-DD')).diff(
+              moment(fromDate[0]).format('YYYY-MM-DD'),
+              'days'
+            ) >= 0 &&
+            moment(moment(ele.datezz).format('YYYY-MM-DD')).diff(
+              moment(fromDate[1]).format('YYYY-MM-DD'),
+              'days'
+            ) <= 0
         );
       }
       setchangedVal(dataset);
@@ -448,14 +459,14 @@ const Index = ({
     <div>
       <Card>
         <Row>
-          <Col sm={8} md={6} lg={5} className='text-left mb-3'>
+          <Col sm={5} md={4} lg={3} className='text-left mb-3'>
             <Input
               placeholder='Search'
               value={search}
               onChange={(e) => setsearch(e.target.value)}
             />
           </Col>
-          <Col sm={10} md={8} lg={7} className='text-left mb-3 pl-2'>
+          <Col sm={8} md={7} lg={6} className='text-left mb-3 pl-2'>
             <RangePicker
               format='DD-MM-YYYY'
               onChange={(e, date) => {
@@ -464,7 +475,7 @@ const Index = ({
               }}
             />
           </Col>
-          <Col sm={6} md={10} lg={12} className='text-right mb-3'>
+          <Col sm={11} md={13} lg={15} className='text-right mb-3'>
             <Button
               type='primary mr-2'
               danger
@@ -476,7 +487,14 @@ const Index = ({
               icon={<DownloadOutlined />}
               onClick={(e) => downloadCategory()}
             >
-              Category Expense
+              Category
+            </Button>
+            <Button
+              type='primary mr-2 '
+              icon={<PlusCircleOutlined />}
+              onClick={(e) => setcatModalVisible(true)}
+            >
+              Category
             </Button>
             <Button
               type='primary '
@@ -498,20 +516,24 @@ const Index = ({
             />
             <h5 style={{ marginTop: '-60px' }} className='pl-3'>
               Total Credit:{' '}
-              {changedVal.reduce((accumulator, object) => {
-                return (
-                  accumulator +
-                  parseFloat(object.type === 'Credit' ? object.amounts : 0)
-                );
-              }, 0).toFixed(2)}
+              {changedVal
+                .reduce((accumulator, object) => {
+                  return (
+                    accumulator +
+                    parseFloat(object.type === 'Credit' ? object.amounts : 0)
+                  );
+                }, 0)
+                .toFixed(2)}
               <br />
               Total Debit:{' '}
-              {changedVal.reduce((accumulator, object) => {
-                return (
-                  accumulator +
-                  parseFloat(object.type === 'Debit' ? object.amounts : 0)
-                );
-              }, 0).toFixed(2)}
+              {changedVal
+                .reduce((accumulator, object) => {
+                  return (
+                    accumulator +
+                    parseFloat(object.type === 'Debit' ? object.amounts : 0)
+                  );
+                }, 0)
+                .toFixed(2)}
             </h5>
           </Col>
         </Row>
@@ -831,6 +853,17 @@ const Index = ({
         setcategoryModel={setcategoryModel}
       />
       <AddCategory visible={categoryModel} cancel={setcategoryModel} />
+      <Category
+        visible={catmodalVisible}
+        cancel={setcatModalVisible}
+        seteditcatModalVisible={seteditcatModalVisible}
+        setData={seteditCatData}
+      />
+      <EditCategory
+        visible={editcatmodalVisible}
+        cancel={seteditcatModalVisible}
+        data={editCatData}
+      />
     </div>
   );
 };

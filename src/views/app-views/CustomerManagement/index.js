@@ -340,7 +340,7 @@ const Index = ({
       <div style={{ display: 'none' }}>
         <div ref={pdfRef} style={styles.page}>
           <h6 style={styles.fullWidth}>Due Amounts </h6>
-          {data.length > 0 && (
+          {data.filter((ele) => !ele.isActive).length > 0 && (
             <div>
               <div style={styles.fullWidth}>
                 <table style={styles.fullWidth}>
@@ -423,114 +423,133 @@ const Index = ({
                         Refund
                       </th>
                     </tr>
-                    {data.map((ele, indz) => (
-                      <tr
-                        style={{
-                          border: 'thin solid #DCDCDC',
-                          borderBottom: 'thin solid #DCDCDC',
-                          width: '120px',
-                        }}
-                        key={indz}
-                      >
-                        <td
+                    {data
+                      .filter((ele) => !ele.isActive)
+                      .map((ele, indz) => (
+                        <tr
                           style={{
+                            border: 'thin solid #DCDCDC',
+                            borderBottom: 'thin solid #DCDCDC',
                             width: '120px',
-                            borderRight: 'thin solid #DCDCDC',
-                            textAlign: 'left',
-                            padding: '6px',
                           }}
+                          key={indz}
                         >
-                          {ele.land_owner}
-                        </td>
-                        <td
-                          style={{
-                            width: '120px',
-                            borderRight: 'thin solid #DCDCDC',
-                            textAlign: 'left',
-                            padding: '6px',
-                          }}
-                        >
-                          {ele.total_amount}
-                        </td>
-                        <td
-                          style={{
-                            width: '120px',
-                            borderRight: 'thin solid #DCDCDC',
-                            textAlign: 'left',
-                            padding: '6px',
-                          }}
-                        >
-                          {ele.paymentDetails.reduce((accumulator, object) => {
-                            return accumulator + parseFloat(object.amount);
-                          }, 0)}
-                        </td>
-                        <td
-                          style={{
-                            width: '120px',
-                            borderRight: 'thin solid #DCDCDC',
-                            textAlign: 'left',
-                            padding: '6px',
-                          }}
-                        >
-                          {parseFloat(
-                            ele.total_amount !== '' && ele.total_amount !== null
-                              ? ele.total_amount
-                              : 0
-                          ) -
-                            ele.paymentDetails.reduce((accumulator, object) => {
-                              return accumulator + parseFloat(object.amount);
-                            }, 0)}
-                        </td>
-                        <td
-                          style={{
-                            width: '120px',
-                            borderRight: 'thin solid #DCDCDC',
-                            textAlign: 'left',
-                            padding: '6px',
-                          }}
-                        >
-                          {ele.paymentDetails.length > 0
-                            ? ele.paymentDetails[0].date_of_payment.substring(
-                                0,
-                                10
-                              )
-                            : ''}
-                        </td>
-                        <td
-                          style={{
-                            width: '120px',
-                            borderRight: 'thin solid #DCDCDC',
-                            textAlign: 'left',
-                            padding: '6px',
-                          }}
-                        >
-                          {ele.paymentDetails.length > 0
-                            ? ele.paymentDetails[0].amount
-                            : ''}
-                        </td>
-                        <td
-                          style={{
-                            width: '120px',
-                            borderRight: 'thin solid #DCDCDC',
-                            textAlign: 'left',
-                            padding: '6px',
-                          }}
-                        >
-                          {ele.customerRepayments.reduce(
-                            (accumulator, object) => {
-                              return accumulator + parseFloat(object.amount);
-                            },
-                            0
-                          )}
-                        </td>
-                      </tr>
-                    ))}
+                          <td
+                            style={{
+                              width: '120px',
+                              borderRight: 'thin solid #DCDCDC',
+                              textAlign: 'left',
+                              padding: '6px',
+                            }}
+                          >
+                            {ele.land_owner}
+                          </td>
+                          <td
+                            style={{
+                              width: '120px',
+                              borderRight: 'thin solid #DCDCDC',
+                              textAlign: 'left',
+                              padding: '6px',
+                            }}
+                          >
+                            {ele.total_amount}
+                          </td>
+                          <td
+                            style={{
+                              width: '120px',
+                              borderRight: 'thin solid #DCDCDC',
+                              textAlign: 'left',
+                              padding: '6px',
+                            }}
+                          >
+                            {ele.paymentDetails.reduce(
+                              (accumulator, object) => {
+                                return accumulator + parseFloat(object.amount);
+                              },
+                              0
+                            )}
+                          </td>
+                          <td
+                            style={{
+                              width: '120px',
+                              borderRight: 'thin solid #DCDCDC',
+                              textAlign: 'left',
+                              padding: '6px',
+                            }}
+                          >
+                            {parseFloat(
+                              ele.total_amount !== '' &&
+                                ele.total_amount !== null
+                                ? ele.total_amount
+                                : 0
+                            ) -
+                              ele.paymentDetails.reduce(
+                                (accumulator, object) => {
+                                  return (
+                                    accumulator + parseFloat(object.amount)
+                                  );
+                                },
+                                0
+                              )}
+                          </td>
+                          <td
+                            style={{
+                              width: '120px',
+                              borderRight: 'thin solid #DCDCDC',
+                              textAlign: 'left',
+                              padding: '6px',
+                            }}
+                          >
+                            {ele.paymentDetails.length > 0
+                              ? ele.paymentDetails[0].date_of_payment.substring(
+                                  0,
+                                  10
+                                )
+                              : ''}
+                          </td>
+                          <td
+                            style={{
+                              width: '120px',
+                              borderRight: 'thin solid #DCDCDC',
+                              textAlign: 'left',
+                              padding: '6px',
+                            }}
+                          >
+                            {ele.paymentDetails.length > 0
+                              ? ele.paymentDetails[0].amount
+                              : ''}
+                          </td>
+                          <td
+                            style={{
+                              width: '120px',
+                              borderRight: 'thin solid #DCDCDC',
+                              textAlign: 'left',
+                              padding: '6px',
+                            }}
+                          >
+                            {ele.customerRepayments.reduce(
+                              (accumulator, object) => {
+                                return accumulator + parseFloat(object.amount);
+                              },
+                              0
+                            )}
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
                 <h5 className='' style={{ width: '410px', fontSize: '9px' }}>
                   Total:{' '}
                   {data.reduce((accumulator, object) => {
-                    return accumulator + parseFloat(object.total_amount);
+                    return (
+                      accumulator +
+                      parseFloat(
+                        object.total_amount !== '' &&
+                          object.total_amount !== null
+                          ? object.total_amount
+                          : 0
+                      )
+                    );
                   }, 0)}
                   <br />
                   Total Recieved:{' '}
